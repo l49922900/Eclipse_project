@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<!-- 
+	
+在 Maven 中，我們會在 pom.xml 中定義專案所需的依賴（dependencies），
+這樣可以讓 Maven 自動幫助我們管理和下載需要的庫。	
+	
+ -->
+
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>javaweb</groupId>
+	<artifactId>javaweb</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<release>21</release>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.2.3</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.34</version>
+			<scope>provided</scope>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<!-- 
+		
+		Gson:
+			依賴說明：com.google.code.gson:gson:2.11.0
+			簡介：Gson 是由 Google 提供的 Java 庫，用於在 Java 物件和 JSON（JavaScript Object
+		Notation）之間進行轉換。
+			使用場景：當你需要將 Java 物件序列化為 JSON 字符串，或將 JSON 轉換為 Java 物件時，非常適合使用 Gson。
+			
+			
+		 -->
+
+
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version>
+		</dependency>
+		<!--
+		. MySQL Connector:
+			
+			依賴說明：mysql:mysql-connector-java:8.0.33
+			簡介：MySQL Connector 是連接 Java 程式與 MySQL 資料庫的驅動程式。
+			使用場景：當你的應用程式需要讀取、寫入或更新 MySQL 資料庫中的資料時，這個驅動程式非常重要。
+						
+		-->
+
+
+		<!-- JavaMail API -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		<!-- 
+		JavaMail API:
+		
+			依賴說明：com.sun.mail:javax.mail:1.6.2
+			簡介：JavaMail API 是用來在 Java 中發送和接收電子郵件的庫。
+			使用場景：當應用程式需要發送通知、警告等電子郵件時，這個庫就非常有用。	
+		-->
+
+
+		<!-- 
+		SLF4J API 
+		簡介：SLF4J（Simple Logging Facade for Java）是一個簡單的日誌外觀，
+			 提供一個統一的 API 來訪問不同的日誌框架（例如 Logback、Log4j 等）。
+		功能：這個依賴讓你可以使用統一的接口來進行日誌記錄，而不需要關心具體使用哪個日誌實現	
+		-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.30</version>
+		</dependency>
+		<!-- 
+    	Logback 實現
+    	簡介：Logback 是一個強大的日誌框架，它是 SLF4J 的原生實現之一。
+		功能：這個依賴提供了實際的日誌記錄功能，包括將日誌輸出到控制台、文件等。
+			 當你使用 SLF4J API 進行日誌記錄時，Logback 會負責實際的日誌處理和輸出。	
+    	-->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+
+
+		<!-- JSTL API -->
+		<dependency>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<!-- JSTL Implementation -->
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+	</dependencies>
+
+
+</project>
