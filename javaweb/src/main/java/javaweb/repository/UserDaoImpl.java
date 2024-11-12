@@ -25,9 +25,9 @@ public class UserDaoImpl extends BaseDao implements UserDao {
 	public List<User> findAllUsers() {
 		List<User> users = new ArrayList<>();
 		String sql = "select user_id, username, password_hash, salt, email, active, role from users";
-		try(PreparedStatement pstmt = conn.prepareStatement(sql);
+		try(Statement stmt = conn.createStatement();
 				// 創建PreparedStatement連線物件 {
-				ResultSet rs = pstmt.executeQuery();){
+				ResultSet rs = stmt.executeQuery(sql)){
 			// 逐筆尋訪
 			while (rs.next()) {
 				// 建立 user 物件並將資料配置進去
