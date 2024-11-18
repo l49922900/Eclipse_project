@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Scooter Update</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css">
+<link rel="stylesheet" href="/css/buttons.css">
+</head>
+<body>
+	<div th:replace="menu :: menuFragment"></div>
+
+	<div style="padding: 15px">
+		<form class="pure-form" th:object="${scooterDto}"
+			th:action="@{/scooter/update/{id}(id=${scooterDto.scooterId})}"
+			method="post">
+			<fieldset>
+				<legend>機車資訊修改</legend>
+
+				機車ID: <input type="number" th:field="*{scooterId}" readonly="true" />
+				<p />
+
+				車牌號碼: <input type="text" th:field="*{licensePlate}" />
+				<div th:if="${#fields.hasErrors('licensePlate')}" style="color: red"
+					th:errors="*{licensePlate}"></div>
+				<p />
+
+				機車型號: <input type="text" th:field="*{model}" />
+				<div th:if="${#fields.hasErrors('model')}" style="color: red"
+					th:errors="*{model}"></div>
+				<p />
+
+				引擎排氣量 (cc): <input type="number" th:field="*{cc}" />
+				<div th:if="${#fields.hasErrors('cc')}" style="color: red"
+					th:errors="*{cc}"></div>
+				<p />
+
+				車種: <input type="text" th:field="*{type}" />
+				<div th:if="${#fields.hasErrors('type')}" style="color: red"
+					th:errors="*{type}"></div>
+				<p />
+
+
+
+				日租費率: <input type="number" th:field="*{dailyRate}" />
+				<div th:if="${#fields.hasErrors('dailyRate')}" style="color: red"
+					th:errors="*{dailyRate}"></div>
+				<p />
+
+				狀態: 
+				<select th:field="*{status}">
+					<option value="available" th:text="#{status.available}">可租</option>
+					<option value="rented" th:text="#{status.rented}">已出租</option>
+					<option value="maintenance" th:text="#{status.maintenance}">維修中</option>
+				</select>
+				<div th:if="${#fields.hasErrors('status')}" style="color: red"
+					th:errors="*{status}"></div>
+				<p />
+
+
+
+				車況描述:
+				<textarea th:field="*{conditionNote}" rows="4" cols="50"></textarea>
+				<div th:if="${#fields.hasErrors('conditionNote')}"
+					style="color: red" th:errors="*{conditionNote}"></div>
+				<p />
+
+				上次保養日期: <input type="date" th:field="*{lastMaintenanceDate}" />
+				<div th:if="${#fields.hasErrors('lastMaintenanceDate')}"
+					style="color: red" th:errors="*{lastMaintenanceDate}"></div>
+				<p />
+
+				<button type="submit" class="pure-button pure-button-primary">修改</button>
+			</fieldset>
+		</form>
+	</div>
+</body>
+</html>

@@ -49,7 +49,7 @@ public class Room {
 	
 	@Id
 //	@GeneratedValue(strategy = GenerationType.IDENTITY) 
-	//room_id自動生成，從1開始每次自動+1，過浩不補
+	//room_id自動生成，從1開始每次自動+1，過號不補
 	@Column(name = "room_id")
 	private Integer roomId;
 	

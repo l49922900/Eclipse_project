@@ -38,27 +38,21 @@ RoomRepositoryJdbc 使用傳統 JDBC（Java Database Connectivity）來操作資
 並能自動生成查詢語句。在需要簡單 CRUD 操作或是常見查詢語句時，使用 JPA 能夠減少 SQL 編寫的工作量
  */
 
-
-
 package com.example.demo.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import com.example.demo.model.entity.Scooter;
 
-
-import com.example.demo.model.entity.Room;
-
-// Spring JPA
+//Spring JPA
 @Repository
 /*
 @Repository 是 Spring Data JPA 的一部分，它標註 RoomRepository 為資料存取層的 Bean，
 使 Spring 可以自動管理這個物件的生命週期。
- */
-public interface RoomRepository extends JpaRepository<Room, Integer> {
+*/
+public interface ScooterRepository extends JpaRepository<Scooter,Integer>{
 	/*
 	JpaRepository 介面:
 	
@@ -80,9 +74,8 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 	 */
 	
 	
-	
 	// 1. 查詢 roomSize 大於指定值的房間(自動生成 SQL)
-	List<Room> findByRoomSizeGreaterThan(Integer size);
+	List<Scooter> findByccGreaterThan(Integer cc);
 	/*
 	當繼承了 JpaRepository（JPA的高階介面）後，Spring Data JPA 會根據方法名稱自動生成對應的 SQL 查詢語句。
 	
@@ -99,24 +92,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 	
 	
 	
+	List<Scooter> findByccLessThan(Integer cc);
 	
-	// 2. 查詢 roomSize 大於指定值的房間(JPQL 以 entity 來操作)
-	@Query("select r from Room r where r.roomSize > :size")
-	//@Query 提供了使用 JPQL（Java Persistence Query Language）或原生 SQL 來進行自定義查詢的能力
-	//優先使用 JPQL（findRoomsBySizeGreaterThen1）：在大多數情況下，使用 JPQL 可以滿足基本的查詢需求，並能保持良好的可移植性和可讀性
-	List<Room> findRoomsBySizeGreaterThan1(@Param("size") Integer size);
-	/*
-	@Param("size") Integer size: 用來將方法參數 size 綁定到 JPQL（Java Persistence Query Language）或原生 SQL 查詢中的命名參數 :size 上。
-	
-	@Query 指定了一段 JPQL 查詢語句 "select r from Room r where r.roomSize > :size"。
-	:size 是 JPQL 查詢語句中的命名參數。
-	@Param("size") Integer size 告訴 JPA 將方法參數 size 的值綁定到查詢中的 :size 參數上。
-	 */
-	
-	
-	
-	// 3. 查詢 roomSize 大於指定值的房間(SQL 以 table 來操作)
-	@Query(value = "select room_id, room_name, room_size from room where room_size > :size", nativeQuery = true)
-	//@Query 提供了使用 JPQL（Java Persistence Query Language）或原生 SQL 來進行自定義查詢的能力
-	List<Room> findRoomsBySizeGreaterThen2(@Param("size") Integer  size);
+	List<Scooter> findBycc(Integer cc);
 }

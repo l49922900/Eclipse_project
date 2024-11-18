@@ -16,7 +16,6 @@ import com.example.demo.model.entity.Room;
 import com.example.demo.repository.RoomRepositoryJdbc;
 
 // 實現 RoomRepositoryJdbc 介面
-//@Repository("roomJdbc")
 @Repository  
 /*
 標註這個類別是資料庫存取層，並將其交給 Spring 容器管理。
