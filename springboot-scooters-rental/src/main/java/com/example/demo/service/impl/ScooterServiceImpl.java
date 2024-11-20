@@ -23,6 +23,8 @@ import com.example.demo.repository.ScooterRepository;
 import com.example.demo.repository.ScooterRepositoryJdbc;
 import com.example.demo.service.ScooterService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ScooterServiceImpl implements ScooterService {
 
@@ -50,12 +52,13 @@ public class ScooterServiceImpl implements ScooterService {
         return scooterMapper.toDto(scooter);
     }
 
+   
     @Override
     public void addScooter(ScooterDto scooterDto) {
-        Optional<Scooter> optScooter = scooterRepository.findById(scooterDto.getScooterId());
-        if (optScooter.isPresent()) {
-            throw new ScooterAlreadyExistsException("新增失敗: 機車 " + scooterDto.getScooterId() + " 已存在");
-        }
+//        Optional<Scooter> optScooter = scooterRepository.findById(scooterDto.getScooterId());
+//        if (optScooter.isPresent()) {
+//            throw new ScooterAlreadyExistsException("新增失敗: 機車 " + scooterDto.getScooterId() + " 已存在");
+//        }
 
         Scooter scooter = scooterMapper.toEntity(scooterDto);
         Scooter isScooternull = scooterRepository.save(scooter);
@@ -68,6 +71,7 @@ public class ScooterServiceImpl implements ScooterService {
     public void addScooter(Integer scooterId, String licensePlate, String model, Integer cc, String type, Status status,
                            Double dailyRate, String conditionNote, LocalDate lastMaintenanceDate) {
         ScooterDto scooterDto = new ScooterDto(scooterId, licensePlate, model, cc, type, status, dailyRate, conditionNote, lastMaintenanceDate);
+        scooterDto.setScooterId(null);
         addScooter(scooterDto);
     }
 

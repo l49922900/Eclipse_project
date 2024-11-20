@@ -1,12 +1,16 @@
 package com.example.demo.model.dto;
 
 import java.time.LocalDate;
+
+import org.hibernate.validator.constraints.Range;
+
 import com.example.demo.model.entity.Scooter.Status;
 import com.example.demo.validation.AdvancedValidation;
 import com.example.demo.validation.BasicValidation;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -34,9 +38,12 @@ public class ScooterDto {
 	//groups = AdvancedValidation.class: 使用分組標記介面，為了優先驗證ScooterDto @NotNull
 	private String model;
 
-//	@NotNull(message = "{scooterDto.cc.notNull}")
+
 //	@Positive(message = "{scooterDto.cc.positive}")
-	@Min(value = 1, message = "{scooterDto.cc.positive}")
+//	@Min(value = 1, message = "{scooterDto.cc.positive}")
+	//@NotBlank(message = "{scooterDto.cc.notNull}")
+	@Range(min = 1, max = 999999999, message = "{scooterDto.cc.range}",groups = AdvancedValidation.class)
+	@NotNull(message = "{scooterDto.cc.notNull}",groups = BasicValidation.class)
 	private Integer cc;
 
 	private String type;
@@ -44,7 +51,9 @@ public class ScooterDto {
 	private Status status;
 
 //	@Positive(message = "{scooterDto.dailyRate.positive}")
-	@Min(value = 1, message = "{scooterDto.dailyRate.positive}")
+//	@Min(value = 1, message = "{scooterDto.dailyRate.positive}")
+	@Range(min = 1, max = 999999999, message = "{scooterDto.dailyRate.range}",groups = AdvancedValidation.class)
+	@NotNull(message = "{scooterDto.dailyRate.notNull}",groups = BasicValidation.class)
 	private double dailyRate;
 
 	private String conditionNote;

@@ -7,12 +7,15 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +50,21 @@ public class ScooterController {
     @Autowired
     private ScooterService scooterService;
     
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        // 為 Integer 類型註冊自訂的 CustomNumberEditor
+        binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, null, true));
+/*
+@InitBinder: 這個註解用來對 WebDataBinder 進行初始化操作。
+WebDataBinder 是一個資料綁定器，它負責將表單中的輸入值轉換為對應的對象屬性。
+
+
+CustomNumberEditor(Integer.class, null, true): 這個轉換器允許將空字串轉換為 null，
+並且處理 Integer 型別的欄位。
+ */
+    }
+    
+    
     @GetMapping
     public String getScooters(Model model, @ModelAttribute ScooterDto scooterDto) {
         // 查詢所有機車，顯示到 scooter/scooter 頁面
@@ -56,8 +74,13 @@ public class ScooterController {
     }
     
     @PostMapping
-    public String addScooter( @Validated({BasicValidation.class, AdvancedValidation.class}) @ModelAttribute ScooterDto scooterDto, BindingResult bindingResult, Model model) {
-        // 新增機車資料
+    public String addScooter( @Validated({BasicValidation.class, AdvancedValidation.class})  @ModelAttribute ScooterDto scooterDto, BindingResult bindingResult, Model model) {
+/*
+@Validated 與 @Valid 區別：@Validated 支援分組驗證，而 @Valid 則不支援。因此，在需要使用分組驗證的地方，必須使用 @Validated。
+
+分組驗證的作用：當你在 DTO (資料傳輸物件) 上定義不同的驗證規則時，可以通過分組來靈活控制不同的驗證場景。
+ */
+    	// 新增機車資料
         if (bindingResult.hasErrors()) {
             model.addAttribute("scooterDtos", scooterService.getAllScooters());
             return "scooter";

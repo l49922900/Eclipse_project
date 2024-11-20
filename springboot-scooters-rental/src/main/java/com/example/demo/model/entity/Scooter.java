@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -81,6 +82,13 @@ public class Scooter {
     }
     
     
+//    @PrePersist
+//    public void prePersist() {
+//        if (scooterId == null) {
+//        	scooterId = 1; // 設置預設值
+//        }
+//    }
+
     
 	/*
 	上述程式碼會自動產生以下新增 SQL 語句並交由 MySQL 執行

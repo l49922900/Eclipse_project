@@ -8,10 +8,14 @@
  -->
 		
 		<fieldset>
-			<legend>Scooter 表單</legend>
-			<label>機車ID:: <input type="number" th:field="*{scooterId}" /></label>
-				<!--  th:field:自動將表單欄位與資料模型屬性對應。 -->		
-			<div th:if="${#fields.hasErrors('scooterId')}" style="color: red" th:errors="*{scooterId}">錯誤</div>
+		 
+		
+		<legend>Scooter 表單</legend>
+		<label><input type="hidden" th:field="*{scooterId}" /></label>
+			
+		<div th:if="${#fields.hasErrors('scooterId')}" style="color: red" th:errors="*{scooterId}">錯誤</div>	
+		 
+			<!--  th:field:自動將表單欄位與資料模型屬性對應。 -->	
 			<!--  th:if="${#fields.hasErrors('scooterId')}":用於條件渲染。在這裡 th:if="${#fields.hasErrors('fieldName')}" 檢查是否有欄位錯誤，如果有，會顯示錯誤訊息。 
 				  th:errors:用於顯示欄位的錯誤訊息。如果該欄位存在錯誤，th:errors="*{fieldName}" 會顯示相應的錯誤訊息。
 			-->
@@ -37,7 +41,7 @@
 				th:errors="*{type}">錯誤</div>
 
 			<p />
-			<label>日租費率: <input type="number" th:field="*{dailyRate}" /></label>
+			<label>日租費率: <input type="number" th:field="*{dailyRate}" required /></label>
 			<div th:if="${#fields.hasErrors('dailyRate')}" style="color: red"
 				th:errors="*{dailyRate}">錯誤</div>
 
