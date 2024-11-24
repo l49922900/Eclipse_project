@@ -11,9 +11,9 @@
         
         <!-- 篩選條件表單 -->
         <form th:action="@{/scooters/filter}" method="get" class="mb-4">
-            <div class="row g-3">
+            <div class="row g-3" justify-content-center>
                 <!-- 車型 -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="model" class="form-label">車型</label>
                     <select id="model" name="model" class="form-select">
                         <option value="" selected>全部</option>
@@ -30,7 +30,7 @@ selected：預設選中這個選項，使其在頁面載入時顯示為預設選
                 </div>
 
                 <!-- CC數範圍滑桿 -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="ccRange" class="form-label">CC數範圍</label>
 <!-- 
 <label> 元素：專門用來關聯和描述表單中的輸入控件。當使用者點擊這個標籤時，
@@ -56,19 +56,11 @@ oninput="..."：這段 JavaScript 用來實時更新顯示滑桿的數值。每�
 <!-- id="ccValue": 每當滑桿的值改變時，oninput 事件會觸發，將 <span id="ccValue"> 中的文字設為滑桿的當前值 (this.value)。初始值設為 50 -->
                 </div>
 
-                <!-- 狀態 -->
-                <div class="col-md-3">
-                    <label for="status" class="form-label">狀態</label>
-                    <select id="status" name="status" class="form-select">
-                        <option value="" selected>全部</option>
-                        <option value="available">可用</option>
-                        <option value="rented">出租中</option>
-                        <option value="maintenance">維修中</option>
-                    </select>
-                </div>
+
+       
 
                 <!-- 日租價格範圍滑桿 -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="priceRange" class="form-label">日租價格範圍</label>
                     <input type="range" id="priceRange" name="priceRange" class="form-range" min="100" max="2000" step="50" oninput="document.getElementById('priceValue').innerHTML = this.value">
                     <p>目前價格: <span id="priceValue">100</span></p>

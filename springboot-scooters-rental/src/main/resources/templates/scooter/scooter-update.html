@@ -25,30 +25,58 @@
 					th:errors="*{licensePlate}"></div>
 				<p />
 
+
+
 				機車型號: <input type="text" th:field="*{model}" />
 				<div th:if="${#fields.hasErrors('model')}" style="color: red"
 					th:errors="*{model}"></div>
 				<p />
 
-				引擎排氣量 (cc): <input type="number" th:field="*{cc}" />
+
+
+
+				車種: <select th:field="*{cc}">
+					<option value="100">100</option>
+					<option value="125">125</option>
+					<option value="150">150</option>
+					<option value="200">200</option>
+				</select>
 				<div th:if="${#fields.hasErrors('cc')}" style="color: red"
 					th:errors="*{cc}"></div>
+
+				<p />
+				<!-- 
+				車種: <input type="text" th:field="*{type}" />
+				<div th:if="${#fields.hasErrors('type')}" style="color: red"
+					th:errors="*{type}"></div>
 				<p />
 
-				車種: <input type="text" th:field="*{type}" />
+ -->
+
+
+
+				車種: <select th:field="*{type}">
+					<option value="scooter">速可達(scooter)</option>
+					<option value="manual">檔車(Manual Motorcycle)</option>
+				</select>
 				<div th:if="${#fields.hasErrors('type')}" style="color: red"
 					th:errors="*{type}"></div>
 				<p />
 
 
 
-				日租費率: <input type="number" th:field="*{dailyRate}" />
+				車種: <select th:field="*{dailyRate}">
+					<option value="300">300</option>
+					<option value="400">400</option>
+					<option value="500">500</option>
+					<option value="600">600</option>
+				</select>
 				<div th:if="${#fields.hasErrors('dailyRate')}" style="color: red"
 					th:errors="*{dailyRate}"></div>
+
 				<p />
 
-				狀態: 
-				<select th:field="*{status}">
+				狀態: <select th:field="*{status}">
 					<option value="available" th:text="#{status.available}">可租</option>
 					<option value="rented" th:text="#{status.rented}">已出租</option>
 					<option value="maintenance" th:text="#{status.maintenance}">維修中</option>

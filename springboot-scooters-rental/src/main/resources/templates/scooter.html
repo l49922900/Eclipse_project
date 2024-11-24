@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Scooter</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css">
-    <link rel="stylesheet" href="/css/buttons.css">
 </head>
 <body>
     <!-- 菜單列的包含文件 -->
@@ -17,7 +16,7 @@
             <tr>
                 <!-- 新增 Scooter 表單 -->
                 
-                <td valign="top" th:include="scooter/scooter_form :: scooterForm"></td>
+                <td valign="top" th:include="scooter/scooter-form :: scooterForm"></td>
                 <!-- 
                 用來引用另一個 Thymeleaf 片段 (fragment)
                 格式為 th:include="模板路徑 :: 片段名稱"
@@ -26,7 +25,7 @@
                 
 
                 <!-- Scooter 列表 -->
-                <td valign="top" th:include="scooter/scooter_list :: scooterList"></td>
+                <td valign="top" th:include="scooter/scooter-list :: scooterList"></td>
             </tr>
         </table>
     </div>

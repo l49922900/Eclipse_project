@@ -134,5 +134,19 @@ public class ScooterServiceImpl implements ScooterService {
                 .map(scooterMapper::toDto)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    public List<ScooterDto> filterScooters(String type, String cc, String status, String dailyRate) {
+        return scooterRepository.findAll().stream()
+                .filter(scooter -> type == null || type.isEmpty() || scooter.getType().equals(type))
+                .filter(scooter -> cc == null || cc.isEmpty() || scooter.getCc().equals(Integer.parseInt(cc)))
+//Integer.parseInt(cc) 是將字串直接轉換成基本型別 int。由於 equals() 方法是物件的方法，Java 會自動將 parseInt() 產生的 int 透過自動裝箱(autoboxing)轉換成 Integer 物件，以便能夠調用 equals() 方法。
+                .filter(scooter -> status == null || status.isEmpty() || scooter.getStatus().name().equals(status))
+                .filter(scooter -> dailyRate == null || dailyRate.isEmpty() || 
+                                   scooter.getDailyRate() == (Double.parseDouble(dailyRate)))
+                .map(scooterMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 
 }

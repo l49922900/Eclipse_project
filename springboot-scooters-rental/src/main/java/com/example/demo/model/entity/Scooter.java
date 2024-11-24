@@ -43,8 +43,8 @@ public class Scooter {
     @Column(name = "cc",nullable = false)
     private Integer cc;
     
-    //表示車輛的類型，例如「普通」、「電動車」或「速可達」等。此欄位可以幫助系統根據不同的機車類型進行分類、篩選或計費。
-    @Column(name = "type", length = 50)
+    //表示車輛的類型，例如「檔車」或「速可達」等。此欄位可以幫助系統根據不同的機車類型進行分類、篩選或計費。
+    @Column(name = "type",nullable = false, length = 50)
     private String type;
     
     

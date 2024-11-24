@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css">
-    <link rel="stylesheet" href="/css/buttons.css">
 </head>
 <body>
     <div th:fragment="menuFragment">
@@ -18,8 +17,14 @@ body 和 menuFragment 是 片段名稱（fragment name），可以根據需要�
             <div style="padding: 10px">
                 <!-- 判斷是否登入 -->
                 <span th:text="${(userCert == null) ? '尚未登入' : userCert.username}"></span>
-                <a href="/login" class="button-secondary pure-button">Login</a>
-                <a href="/rooms" class="button-secondary pure-button">Room</a>
+                <a th:href="@{/login}" class="button-secondary pure-button">登入</a>
+				<a th:href="@{/scooter}" class="button-secondary pure-button">首頁</a>
+				<a th:href="@{/scooter/admin-filter-menu}" class="button-secondary pure-button">車輛總覽</a>
+				<a th:href="@{https://www.youtube.com/}" class="button-secondary pure-button">車輛維修</a>
+				<a th:href="@{https://www.youtube.com/}" class="button-secondary pure-button">訂單管理</a>
+				<a th:href="@{https://www.youtube.com/}" class="button-secondary pure-button">使用者管理</a>
+				
+
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
                 <tr>
                     <th>車輛 ID</th>
                     <th>車牌號碼</th>
-                    <th>車型</th>
+                    <th>車種</th>
                     <th>引擎排氣量 (cc)</th>
                     <th>類型</th>
                     <th>日租費率</th>
@@ -16,6 +16,7 @@
                     <th>車況描述</th>
                     <th>上次保養日期</th>
                     <th>編輯</th>
+                    <th>維修</th>
                     <th>刪除</th>
                 </tr>
             </thead>
@@ -36,7 +37,9 @@
                     <td th:text="${scooterDto.conditionNote}">車況描述</td>
                     <td th:text="${scooterDto.lastMaintenanceDate}">上次保養日期</td>
                     <td><a class="button-success pure-button" th:href="@{/scooter/{scooterId}(scooterId=${scooterDto.scooterId})}">編輯</a></td>
+                    <td><a class="button-error pure-button" th:href="@{https://www.youtube.com/watch?v=c-SOJsITLLs}">維修</a></td>
                     <td><a class="button-error pure-button" th:href="@{/scooter/delete/{scooterId}(scooterId=${scooterDto.scooterId})}">刪除</a></td>
+                    
                 </tr>    
             </tbody>
         </table>

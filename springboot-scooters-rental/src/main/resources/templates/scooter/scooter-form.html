@@ -1,21 +1,23 @@
 <div th:fragment="scooterForm">
-	<form class="pure-form" method="post" th:object="${scooterDto}" th:action="@{/scooter}">
-<!-- th:object="${scooterDto}":綁定表單資料模型。在這裡，th:object="${scooterDto}" 表示這個表單與後端的 scooterDto 對象綁定。
+	<form class="pure-form" method="post" th:object="${scooterDto}"
+		th:action="@{/scooter}">
+		<!-- th:object="${scooterDto}":綁定表單資料模型。在這裡，th:object="${scooterDto}" 表示這個表單與後端的 scooterDto 對象綁定。
 	 th:action="@{/scooter}":當表單提交時，表單的資料會發送到 /scooter 的這個 URL 路徑，
 	 對應到後端的 ScooterController 中處理該請求的 @PostMapping("/scooter") 方法。
 
 
  -->
-		
+
 		<fieldset>
-		 
-		
-		<legend>Scooter 表單</legend>
-		<label><input type="hidden" th:field="*{scooterId}" /></label>
-			
-		<div th:if="${#fields.hasErrors('scooterId')}" style="color: red" th:errors="*{scooterId}">錯誤</div>	
-		 
-			<!--  th:field:自動將表單欄位與資料模型屬性對應。 -->	
+
+
+			<legend>Scooter 表單</legend>
+			<label><input type="hidden" th:field="*{scooterId}" /></label>
+
+			<div th:if="${#fields.hasErrors('scooterId')}" style="color: red"
+				th:errors="*{scooterId}">錯誤</div>
+
+			<!--  th:field:自動將表單欄位與資料模型屬性對應。 -->
 			<!--  th:if="${#fields.hasErrors('scooterId')}":用於條件渲染。在這裡 th:if="${#fields.hasErrors('fieldName')}" 檢查是否有欄位錯誤，如果有，會顯示錯誤訊息。 
 				  th:errors:用於顯示欄位的錯誤訊息。如果該欄位存在錯誤，th:errors="*{fieldName}" 會顯示相應的錯誤訊息。
 			-->
@@ -30,26 +32,53 @@
 			<div th:if="${#fields.hasErrors('model')}" style="color: red"
 				th:errors="*{model}">錯誤</div>
 
+
+
 			<p />
-			<label>引擎排氣量 (cc): <input type="number" th:field="*{cc}" /></label>
+			<label>引擎排氣量 (cc): <select th:field="*{cc}">
+					<option value="100">100</option>
+					<option value="125">125</option>
+					<option value="150">150</option>
+					<option value="200">200</option>
+			</select>
+			</label>
 			<div th:if="${#fields.hasErrors('cc')}" style="color: red"
 				th:errors="*{cc}">錯誤</div>
 
 			<p />
-			<label>車種: <input type="text" th:field="*{type}" /></label>
+			<label>車種: <select th:field="*{type}">
+					<option value="scooter">速可達(scooter)</option>
+					<option value="manual">檔車(Manual Motorcycle)</option>
+			</select>
+			</label>
 			<div th:if="${#fields.hasErrors('type')}" style="color: red"
 				th:errors="*{type}">錯誤</div>
 
+<!-- 
 			<p />
-			<label>日租費率: <input type="number" th:field="*{dailyRate}" required /></label>
-			<div th:if="${#fields.hasErrors('dailyRate')}" style="color: red"
-				th:errors="*{dailyRate}">錯誤</div>
+			<label>車種: <input type="text" th:field="*{type}" /></label>
+			<div th:if="${#fields.hasErrors('type')}" style="color: red"
+				th:errors="*{type}">錯誤</div>
+ -->
 
 			<p />
+
+						<label>日租費率: <select th:field="*{dailyRate}">
+					<option value="300">300</option>
+					<option value="400">400</option>
+					<option value="500">500</option>
+					<option value="600">600</option>
+			</select>
+			</label>
+			<div th:if="${#fields.hasErrors('dailyRate')}" style="color: red"
+				th:errors="*{dailyRate}">錯誤</div>
+				
+				
+			<p />
 			<label>狀態: <select th:field="*{status}">
-					<option value="available">可用</option>
-					<option value="rented">已租借</option>
-					<option value="maintenance">維修中</option>
+					<option value="available">可用(available)</option>
+					<option value="rented">已租借(rented)</option>
+					<option value="maintenance">維修中(maintenance)</option>
 			</select>
 			</label>
 			<div th:if="${#fields.hasErrors('status')}" style="color: red"

@@ -20,6 +20,7 @@ public interface ScooterService {
     public List<ScooterDto> findScootersByCcGreaterThan(Integer cc);
     public List<ScooterDto> findScootersByCcLessThan(Integer cc);
     public List<ScooterDto> findScootersByCc(Integer cc);
+    public List<ScooterDto> filterScooters(String type, String cc, String status, String dailyRate);
     
     
 }

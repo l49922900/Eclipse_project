@@ -35,6 +35,22 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping(value = {"/scooter", "/scooters"})
 /*
+@RequestMapping(value = {"/scooter", "/scooters"}):
+
+	定義一個基礎路徑 (base path)。它的作用是將這個控制器中的所有路由 (routes) 都統一加上一個前綴。
+	
+	統一管理路由前綴:這種方式可以幫助集中管理某一類相關資源的路徑。例如，
+	所有跟 Scooter 相關的 API 都以 /scooter 或 /scooters 開頭，這樣可以讓路由結構清晰且語義化。
+	
+	
+	避免重複寫路徑前綴:在控制器內，如果每個方法的路徑都需要手動加上 /scooter，會比較繁瑣且容易出錯。
+	透過 @RequestMapping，可以將前綴提取出來，減少重複工作。
+ */
+
+
+
+
+/*
 為什麼要分成"/scooter", "/scooters":
 
 RESTful 設計慣例：在 RESTful API 設計中，複數（/scooters）通常用來表示資源的集合（如查詢所有機車），
@@ -50,19 +66,19 @@ public class ScooterController {
     @Autowired
     private ScooterService scooterService;
     
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        // 為 Integer 類型註冊自訂的 CustomNumberEditor
-        binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, null, true));
-/*
-@InitBinder: 這個註解用來對 WebDataBinder 進行初始化操作。
-WebDataBinder 是一個資料綁定器，它負責將表單中的輸入值轉換為對應的對象屬性。
-
-
-CustomNumberEditor(Integer.class, null, true): 這個轉換器允許將空字串轉換為 null，
-並且處理 Integer 型別的欄位。
- */
-    }
+//    @InitBinder
+//    public void initBinder(WebDataBinder binder) {
+//        // 為 Integer 類型註冊自訂的 CustomNumberEditor
+//        binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, null, true));
+///*
+//@InitBinder: 這個註解用來對 WebDataBinder 進行初始化操作。
+//WebDataBinder 是一個資料綁定器，它負責將表單中的輸入值轉換為對應的對象屬性。
+//
+//
+//CustomNumberEditor(Integer.class, null, true): 這個轉換器允許將空字串轉換為 null，
+//並且處理 Integer 型別的欄位。
+// */
+//    }
     
     
     @GetMapping
@@ -105,7 +121,7 @@ CustomNumberEditor(Integer.class, null, true): 這個轉換器允許將空字串
         // 查詢單筆機車資料，顯示在 scooter/scooter_update 頁面
         ScooterDto scooterDto = scooterService.getScooterById(scooterId);
         model.addAttribute("scooterDto", scooterDto);
-        return "scooter/scooter_update";
+        return "scooter/scooter-update";
     }
     
     @PostMapping("/update/{scooterId}")
@@ -113,12 +129,28 @@ CustomNumberEditor(Integer.class, null, true): 這個轉換器允許將空字串
         // 更新機車資料
         if (bindingResult.hasErrors()) {
             model.addAttribute("scooterDto", scooterDto);
-            return "scooter/scooter_update";
+            return "scooter/scooter-update";
         }
         
         
         scooterService.updateScooter(scooterId, scooterDto);
         return "redirect:/scooters";
+    }
+    
+    
+    @GetMapping("/admin-filter-menu")
+    public String getAdminFilterMenu() {
+        // 返回對應的 Thymeleaf 頁面名稱
+        return "admin-filter-menu";
+    }
+    
+    @GetMapping("/filter")
+    public String filterScooters(String type,String cc,String status,String dailyRate,Model modelAttr) {
+
+            List<ScooterDto> filteredScooters = scooterService.filterScooters(type, cc, status, dailyRate);
+            modelAttr.addAttribute("scooters", filteredScooters);
+            return "admin-filter-menu";
+
     }
 
     
@@ -128,4 +160,6 @@ CustomNumberEditor(Integer.class, null, true): 這個轉換器允許將空字串
         model.addAttribute("message", e.getMessage());
         return "error";
     }
+    
+    
 }
