@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>車輛查找 - Scooter Rental</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <!-- 頂部導航列 -->
+    <div th:replace="backend/menu :: menuFragment"></div>
+
+    <div class="container mt-4">
+        <h1 class="text-center">車輛查找</h1>
+        
+        <!-- 篩選條件 -->
+        <form th:action="@{/scooter/filter}" method="get" class="row g-3 mb-4">
+            <!-- 車型 -->
+            <div class="col-md-3">
+                <label for="type" class="form-label">車型</label>
+                <select id="type" name="type" class="form-select">
+                    <option value="" selected>全部車型</option>
+                    <option value="scooter">速可達 (Scooter)</option>
+                    <option value="manual">檔車 (Manual Motorcycle)</option>
+                </select>
+            </div>
+            <!-- CC數 -->
+            <div class="col-md-3">
+                <label for="cc" class="form-label">CC數</label>
+                <select id="cc" name="cc" class="form-select">
+                    <option value="" selected>全部</option>
+                    <option value="100">100</option>
+                    <option value="125">125</option>
+                    <option value="150">150</option>
+                    <option value="200">200</option>
+                </select>
+            </div>
+            <!-- 狀態 -->
+            <div class="col-md-3">
+                <label for="status" class="form-label">狀態</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="" selected>全部狀態</option>
+                    <option value="available">可用</option>
+                    <option value="rented">出租中</option>
+                    <option value="maintenance">維修中</option>
+                </select>
+            </div>
+            <!-- 日租價格 -->
+            <div class="col-md-3">
+                <label for="dailyRate" class="form-label">日租價格</label>
+                <select id="dailyRate" name="dailyRate" class="form-select">
+                    <option value="" selected>全部</option>
+                    <option value="300">300</option>
+                    <option value="400">400</option>
+                    <option value="500">500</option>
+                    <option value="600">600</option>
+                </select>
+            </div>
+            <!-- 提交按鈕 -->
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary">篩選</button>
+                <a th:href="@{/scooter}" class="btn btn-secondary">重置</a>
+            </div>
+        </form>
+
+        <!-- 篩選結果 -->
+        <h2 class="mt-4">篩選結果</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>車牌號碼</th>
+                    <th>車型</th>
+                    <th>CC數</th>
+                    <th>狀態</th>
+                    <th>日租價格</th>
+                    <th>最後維修日期</th>
+                    <th>備註</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 使用 Thymeleaf 迭代資料 -->
+                <tr th:each="scooter : ${scooters}">
+                    <td th:text="${scooter.scooterId}"></td>
+                    <td th:text="${scooter.licensePlate}"></td>
+                    <td th:text="${scooter.model}"></td>
+                    <td th:text="${scooter.cc}"></td>
+                    <td th:text="${scooter.status}"></td>
+                    <td th:text="${scooter.dailyRate}"></td>
+                    <td th:text="${scooter.lastMaintenanceDate}"></td>
+                    <td th:text="${scooter.conditionNote} ?: '無'"></td>
+                    <td>
+                        <div class="d-flex justify-content-evenly">
+                            <a th:href="@{/scooter/{scooterId}(scooterId=${scooter.scooterId})}" class="btn btn-warning btn-sm">編輯</a>
+                            <a th:href="@{/scooter/{id}/maintenance(id=${scooter.scooterId})}" class="btn btn-info btn-sm">維修</a>
+                            <a th:href="@{/scooter/{id}/delete(id=${scooter.scooterId})}" class="btn btn-danger btn-sm" onclick="return confirm('確定要刪除嗎？')">刪除</a>
+                        </div>
+                    </td>
+                </tr>
+                <!-- 當沒有資料時顯示訊息 -->
+                <tr th:if="${#lists.isEmpty(scooters)}">
+                    <td colspan="9" class="text-center">無符合條件的機車</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -2,35 +2,27 @@
 教學去看RoomController
  */
 
-package com.example.demo.controller;
+package com.example.demo.controller.backend;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.demo.exception.ScooterAlreadyExistsException;
 import com.example.demo.exception.ScooterException;
-import com.example.demo.model.dto.ScooterDto;
-import com.example.demo.model.entity.Scooter;
-import com.example.demo.model.entity.Scooter.Status;
-import com.example.demo.service.ScooterService;
+import com.example.demo.model.backend.ScooterDto;
+import com.example.demo.service.backend.ScooterService;
 import com.example.demo.validation.AdvancedValidation;
 import com.example.demo.validation.BasicValidation;
-
-import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping(value = {"/scooter", "/scooters"})
@@ -86,7 +78,7 @@ public class ScooterController {
         // 查詢所有機車，顯示到 scooter/scooter 頁面
         List<ScooterDto> scooterDtos = scooterService.getAllScooters();
         model.addAttribute("scooterDtos", scooterDtos);
-        return "scooter";
+        return "backend/scooter";
     }
     
     @PostMapping
@@ -99,7 +91,7 @@ public class ScooterController {
     	// 新增機車資料
         if (bindingResult.hasErrors()) {
             model.addAttribute("scooterDtos", scooterService.getAllScooters());
-            return "scooter";
+            return "backend/scooter";
         }
         scooterService.addScooter(scooterDto);
         return "redirect:/scooters";
@@ -121,7 +113,7 @@ public class ScooterController {
         // 查詢單筆機車資料，顯示在 scooter/scooter_update 頁面
         ScooterDto scooterDto = scooterService.getScooterById(scooterId);
         model.addAttribute("scooterDto", scooterDto);
-        return "scooter/scooter-update";
+        return "backend/scooter/scooter-update";
     }
     
     @PostMapping("/update/{scooterId}")
@@ -129,7 +121,7 @@ public class ScooterController {
         // 更新機車資料
         if (bindingResult.hasErrors()) {
             model.addAttribute("scooterDto", scooterDto);
-            return "scooter/scooter-update";
+            return "backend/scooter/scooter-update";
         }
         
         
@@ -141,7 +133,7 @@ public class ScooterController {
     @GetMapping("/admin-filter-menu")
     public String getAdminFilterMenu() {
         // 返回對應的 Thymeleaf 頁面名稱
-        return "admin-filter-menu";
+        return "backend/admin-filter-menu";
     }
     
     @GetMapping("/filter")
@@ -149,7 +141,7 @@ public class ScooterController {
 
             List<ScooterDto> filteredScooters = scooterService.filterScooters(type, cc, status, dailyRate);
             modelAttr.addAttribute("scooters", filteredScooters);
-            return "admin-filter-menu";
+            return "backend/admin-filter-menu";
 
     }
 
@@ -158,7 +150,7 @@ public class ScooterController {
     public String handleScooterException(ScooterException e, Model model) {
         // 處理 ScooterException 類型異常，顯示錯誤訊息，並傳到error.html的<p th:text="${message}"></p>顯示
         model.addAttribute("message", e.getMessage());
-        return "error";
+        return "backend/error";
     }
     
     

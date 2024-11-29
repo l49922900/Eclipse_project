@@ -1,0 +1,41 @@
+<div th:fragment="scooterList">
+    <fieldset>
+        <legend>Scooter 列表</legend>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>車輛 ID</th>
+                        <th>車牌號碼</th>
+                        <th>車種</th>
+                        <th>引擎排氣量 (cc)</th>
+                        <th>類型</th>
+                        <th>日租費率</th>
+                        <th>狀態</th>
+                        <th>車況描述</th>
+                        <th>上次保養日期</th>
+                        <th>編輯</th>
+                        <th>維修</th>
+                        <th>刪除</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="scooterDto : ${scooterDtos}">
+                        <td th:text="${scooterDto.scooterId}"></td>
+                        <td th:text="${scooterDto.licensePlate}"></td>
+                        <td th:text="${scooterDto.model}"></td>
+                        <td th:text="${scooterDto.cc}"></td>
+                        <td th:text="${scooterDto.type}"></td>
+                        <td th:text="${scooterDto.dailyRate}"></td>
+                        <td th:text="${scooterDto.status}"></td>
+                        <td th:text="${scooterDto.conditionNote}"></td>
+                        <td th:text="${scooterDto.lastMaintenanceDate}"></td>
+                        <td><a class="btn btn-success btn-sm" th:href="@{/scooter/{scooterId}(scooterId=${scooterDto.scooterId})}">編輯</a></td>
+                        <td><a class="btn btn-warning btn-sm" th:href="@{https://www.youtube.com/watch?v=c-SOJsITLLs}">維修</a></td>
+                        <td><a class="btn btn-danger btn-sm" th:href="@{/scooter/delete/{scooterId}(scooterId=${scooterDto.scooterId})}">刪除</a></td>
+                    </tr>    
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+</div>

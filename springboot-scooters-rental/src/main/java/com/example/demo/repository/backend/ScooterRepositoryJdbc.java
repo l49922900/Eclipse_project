@@ -10,7 +10,7 @@ RoomRepositoryJdbc 使用傳統 JDBC（Java Database Connectivity）來操作資
  */
 
 
-package com.example.demo.repository;
+package com.example.demo.repository.backend;
 
 import com.example.demo.model.entity.Scooter;
 

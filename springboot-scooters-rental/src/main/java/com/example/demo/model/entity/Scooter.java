@@ -1,7 +1,11 @@
 package com.example.demo.model.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +13,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,7 +25,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity  //JPA，實體類與資料表對應
 @Table(name = "scooters") //若資料表與實體類一致可以不用設定此行
-public class Scooter {
+public class Scooter implements Serializable {
+	/*
+	Serializable 是 Java 中的一個標記介面（marker interface），它的主要用途是讓一個類別的實例能夠被序列化（serialize）和反序列化（deserialize）。
+	
+	為何使用 Serializable 
+		1.持久化：將物件存儲到檔案、資料庫或其他存儲設備中。
+			(1)資料庫實體：將實體從資料庫中讀取或寫入時，可能需要序列化和反序列化物件。
+			(2)Session 儲存：在 Web 應用中，若需要將實體物件存儲於 HTTP Session 中，也需要這些物件是可序列化的。
+		2.傳輸：將物件通過網路或其他媒介傳輸（例如 RMI 或分布式系統）。
+		3.快取：將物件存入快取中，然後稍後恢復使用。
+	 */
+	
 
 	
 	/////////////////////////////////////////////////
@@ -76,19 +92,26 @@ public class Scooter {
     
     @Column(name = "last_maintenance_date")
     private LocalDate lastMaintenanceDate;
+    
+    @Column(nullable = false)
+    private Integer usageCount = 0;
+    
+ // 一對多關係: 與 Reservation
+    @OneToMany(mappedBy = "scooter")
+    private List<Reservation> reservations = new ArrayList<>();
+//這個list可以用在當我們需要用Scooter查詢他的Reservation時
+    
+    
+
+    // 一對多關係: 與 MaintenanceRecord
+    @OneToMany(mappedBy = "scooter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MaintenanceRecord> maintenanceRecords = new ArrayList<>();
+
 
     public enum Status {
     	available, rented, maintenance
     }
     
-    
-//    @PrePersist
-//    public void prePersist() {
-//        if (scooterId == null) {
-//        	scooterId = 1; // 設置預設值
-//        }
-//    }
-
     
 	/*
 	上述程式碼會自動產生以下新增 SQL 語句並交由 MySQL 執行

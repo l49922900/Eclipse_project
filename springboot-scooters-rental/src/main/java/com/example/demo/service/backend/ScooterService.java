@@ -1,9 +1,9 @@
-package com.example.demo.service;
+package com.example.demo.service.backend;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import com.example.demo.model.dto.ScooterDto;
+import com.example.demo.model.backend.ScooterDto;
 import com.example.demo.model.entity.Scooter;
 import com.example.demo.model.entity.Scooter.Status;
 
@@ -17,8 +17,6 @@ public interface ScooterService {
     public void updateScooter(Integer scooterId, String licensePlate, String model, Integer cc, String type, Status status,
             Double dailyRate, String conditionNote, LocalDate lastMaintenanceDate); // 修改機車
     public void deleteScooter(Integer scooterId); // 刪除機車
-    public List<ScooterDto> findScootersByCcGreaterThan(Integer cc);
-    public List<ScooterDto> findScootersByCcLessThan(Integer cc);
     public List<ScooterDto> findScootersByCc(Integer cc);
     public List<ScooterDto> filterScooters(String type, String cc, String status, String dailyRate);
     

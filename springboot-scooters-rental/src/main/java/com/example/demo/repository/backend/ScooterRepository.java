@@ -38,7 +38,7 @@ RoomRepositoryJdbc 使用傳統 JDBC（Java Database Connectivity）來操作資
 並能自動生成查詢語句。在需要簡單 CRUD 操作或是常見查詢語句時，使用 JPA 能夠減少 SQL 編寫的工作量
  */
 
-package com.example.demo.repository;
+package com.example.demo.repository.backend;
 
 import java.util.List;
 
@@ -74,8 +74,6 @@ public interface ScooterRepository extends JpaRepository<Scooter,Integer>{
 	 */
 	
 	
-	// 1. 查詢 roomSize 大於指定值的房間(自動生成 SQL)
-	List<Scooter> findByccGreaterThan(Integer cc);
 	/*
 	當繼承了 JpaRepository（JPA的高階介面）後，Spring Data JPA 會根據方法名稱自動生成對應的 SQL 查詢語句。
 	
@@ -90,9 +88,6 @@ public interface ScooterRepository extends JpaRepository<Scooter,Integer>{
 		SELECT * FROM room WHERE room_size > ?;
 	 */
 	
-	
-	
-	List<Scooter> findByccLessThan(Integer cc);
 	
 	List<Scooter> findBycc(Integer cc);
 }

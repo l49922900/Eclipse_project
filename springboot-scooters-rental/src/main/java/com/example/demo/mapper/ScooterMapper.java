@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.model.dto.ScooterDto;
+import com.example.demo.model.backend.ScooterDto;
 import com.example.demo.model.entity.Scooter;
 
 @Component 

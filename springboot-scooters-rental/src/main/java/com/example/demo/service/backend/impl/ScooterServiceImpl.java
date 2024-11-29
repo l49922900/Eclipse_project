@@ -1,29 +1,26 @@
-package com.example.demo.service.impl;
+package com.example.demo.service.backend.impl;
 
+import static java.util.stream.Collectors.toList;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.exception.ScooterAlreadyExistsException;
 import com.example.demo.exception.ScooterException;
 import com.example.demo.exception.ScooterNotFoundException;
 import com.example.demo.mapper.ScooterMapper;
-import com.example.demo.model.dto.ScooterDto;
+import com.example.demo.model.backend.ScooterDto;
 import com.example.demo.model.entity.Scooter;
 import com.example.demo.model.entity.Scooter.Status;
-import com.example.demo.repository.ScooterRepository;
-import com.example.demo.repository.ScooterRepositoryJdbc;
-import com.example.demo.service.ScooterService;
+import com.example.demo.repository.backend.ScooterRepository;
+import com.example.demo.repository.backend.ScooterRepositoryJdbc;
+import com.example.demo.service.backend.ScooterService;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class ScooterServiceImpl implements ScooterService {
@@ -111,21 +108,8 @@ public class ScooterServiceImpl implements ScooterService {
         
     }
     
-    @Override
-    public List<ScooterDto> findScootersByCcGreaterThan(Integer cc) {
-        return scooterRepository.findByccGreaterThan(cc)
-                .stream()
-                .map(scooterMapper::toDto)
-                .collect(Collectors.toList());
-    }
 
-    @Override
-    public List<ScooterDto> findScootersByCcLessThan(Integer cc) {
-        return scooterRepository.findByccLessThan(cc)
-                .stream()
-                .map(scooterMapper::toDto)
-                .collect(Collectors.toList());
-    }
+
 
     @Override
     public List<ScooterDto> findScootersByCc(Integer cc) {

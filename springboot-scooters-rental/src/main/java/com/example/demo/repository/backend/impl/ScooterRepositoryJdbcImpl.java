@@ -1,4 +1,4 @@
-package com.example.demo.repository.impl;
+package com.example.demo.repository.backend.impl;
 
 import java.util.EnumSet;
 
@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.entity.Scooter;
-import com.example.demo.repository.ScooterRepositoryJdbc;
+import com.example.demo.repository.backend.ScooterRepositoryJdbc;
 import com.example.demo.exception.ScooterDataAccessException;
 
 
