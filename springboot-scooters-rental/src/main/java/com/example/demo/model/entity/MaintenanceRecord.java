@@ -43,7 +43,7 @@ public class MaintenanceRecord implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String maintenanceDetails;
 
-    @Column(precision = 10, scale = 2)
+    @Column(precision = 10)
     private double cost;
 
     // Getters and setters

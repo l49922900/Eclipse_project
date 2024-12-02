@@ -76,10 +76,24 @@ public class ScooterController {
     @GetMapping
     public String getScooters(Model model, @ModelAttribute ScooterDto scooterDto) {
         // 查詢所有機車，顯示到 scooter/scooter 頁面
+    	
+/*
+Model:
+Spring MVC 中的一個介面，主要負責在控制器 (Controller) 與視圖 (View) 之間傳遞數據。
+在控制器中，我們可以將數據加入到 Model 中，然後在視圖（通常是 JSP 或 Thymeleaf）中進行顯示。
+
+@ModelAttribute:
+方法參數標註，自動將 HTTP 請求中的參數綁定到一個物件，並將該物件作為控制器方法的參數。例如表單提交時，表單欄位自動對應到物件的屬性。
+ */
         List<ScooterDto> scooterDtos = scooterService.getAllScooters();
         model.addAttribute("scooterDtos", scooterDtos);
         return "backend/scooter";
     }
+    
+    
+    
+    
+    
     
     @PostMapping
     public String addScooter( @Validated({BasicValidation.class, AdvancedValidation.class})  @ModelAttribute ScooterDto scooterDto, BindingResult bindingResult, Model model) {
@@ -104,6 +118,11 @@ public class ScooterController {
     @GetMapping("/delete/{scooterId}")
     public String deleteScooter(@PathVariable Integer scooterId) {
         // 刪除指定 scooterId 的機車
+/*
+@PathVariable:
+用於從 URL 路徑中擷取變數，並將其綁定到方法參數上。常用於 RESTful API 路徑設計，例如 /scooters/{scooterId} 中的 {scooterId}。    	
+ */
+    	
         scooterService.deleteScooter(scooterId);
         return "redirect:/scooters";
     }

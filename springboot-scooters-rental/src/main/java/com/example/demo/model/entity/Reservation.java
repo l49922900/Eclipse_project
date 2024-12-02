@@ -70,7 +70,7 @@ JPA 使用 @JoinColumn 指定外鍵名稱，例如：
 
     private LocalDate paymentDate;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10)
     private double totalAmount;
 
     public enum Status {

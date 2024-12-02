@@ -82,7 +82,7 @@ public class Scooter implements Serializable {
     
     
     
-    @Column(name = "daily_rate", nullable = false)
+    @Column(name = "daily_rate", nullable = false,precision = 10)     
     private double dailyRate;
     
     
