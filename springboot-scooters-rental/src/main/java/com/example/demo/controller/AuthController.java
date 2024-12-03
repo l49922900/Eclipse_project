@@ -63,12 +63,11 @@ public class AuthController {
         user.setUsername(registrationRequest.getUsername());
         user.setPasswordHash(passwordEncoder.encode(registrationRequest.getPassword()));
         user.setEmail(registrationRequest.getEmail());
-        user.setAccountStatus(User.AccountStatus.inactive);
 
         userRepository.save(user);
 
         model.addAttribute("successMessage", "註冊成功！請檢查您的電子郵件以啟用帳號。");
-        return "redirect:/frontend/user/login";
+        return "redirect:/login";
         
 //        @ExceptionHandler({ScooterException.class})
 //        public String handleScooterException(ScooterException e, Model model) {
@@ -77,4 +76,11 @@ public class AuthController {
 //            return "backend/error";
 //        }
     }
+    
+    
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "frontend/user/login"; // 返回你自訂的登入頁面
+    }
+
 }
