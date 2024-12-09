@@ -1,20 +1,24 @@
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.demo.exception.ScooterException;
-import com.example.demo.model.entity.User;
-import com.example.demo.model.frontend.RegistrationRequest;
-import com.example.demo.repository.backend.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.demo.model.RegistrationRequest;
+import com.example.demo.model.dto.LoginRequest;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.security.utils.JwtUtils;
+import com.example.demo.service.impl.UserServiceImpl;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class AuthController {
@@ -23,7 +27,11 @@ public class AuthController {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserServiceImpl UserService;
+    
+    @Autowired
+    private JwtUtils jwtUtils;
+    
 
     // 顯示註冊頁面
     @GetMapping("/register")
@@ -34,7 +42,7 @@ public class AuthController {
 讓頁面（register.html）可以使用。        
  */
         
-        return "frontend/user/register";
+        return "user/register";
     }
 
     // 處理註冊請求
@@ -43,30 +51,24 @@ public class AuthController {
                            BindingResult bindingResult,
                            Model model) {
         if (bindingResult.hasErrors()) {
-            return "frontend/user/register";
+            return "user/register";
         }
 
         // 檢查使用者名稱是否已存在
         if (userRepository.findByUsername(registrationRequest.getUsername()).isPresent()) {
             model.addAttribute("error", "帳號已被使用！");
-            return "frontend/user/register";
+            return "user/register";
         }
 
         // 檢查電子郵件是否已被註冊
         if (userRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
             model.addAttribute("error", "電子郵件已被註冊！");
-            return "frontend/user/register";
+            return "user/register";
         }
 
-        // 建立新使用者
-        User user = new User();
-        user.setUsername(registrationRequest.getUsername());
-        user.setPasswordHash(passwordEncoder.encode(registrationRequest.getPassword()));
-        user.setEmail(registrationRequest.getEmail());
-
-        userRepository.save(user);
-
-        model.addAttribute("successMessage", "註冊成功！請檢查您的電子郵件以啟用帳號。");
+        
+        UserService.registerUser(registrationRequest.getUsername(),registrationRequest.getPassword() , registrationRequest.getEmail());
+        
         return "redirect:/login";
         
 //        @ExceptionHandler({ScooterException.class})
@@ -80,7 +82,52 @@ public class AuthController {
     
     @GetMapping("/login")
     public String showLoginPage() {
-        return "frontend/user/login"; // 返回你自訂的登入頁面
+        return "user/login"; // 返回你自訂的登入頁面
+    }
+    
+    @GetMapping("/home")
+    public String showHomePage() {
+        return "user/home"; // 假設有 home.html 頁面
+    }
+    
+    @PostMapping("/login")
+    public String login(
+        @ModelAttribute LoginRequest loginRequest, 
+        Model model, 
+        HttpServletResponse response
+    ) {
+        //用戶登入並取得 JWT
+    	// Spring Security 將自動處理認證
+        
+        // 生成 JWT
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //從 Spring Security 的上下文中獲取當前用戶的認證資訊。        
+        
+        String token = jwtUtils.generateToken(authentication.getName(),authentication.getAuthorities());
+        //使用工具類生成 JWT（JSON Web Token）
+        
+
+        // 將 JWT 設置為 Cookie
+        Cookie jwtCookie = new Cookie("Authorization", token);
+        //創建一個名為 Authorization 的 Cookie，值為生成的 JWT。
+        
+        
+        jwtCookie.setHttpOnly(true);
+        //設置這個 Cookie 為 HTTP-only，防止客戶端 JavaScript 訪問（增強安全性）。
+        
+        jwtCookie.setHttpOnly(true); 
+        // 防止 JavaScript 訪問
+        
+        jwtCookie.setSecure(true);   
+        // 僅允許 HTTPS
+        
+        jwtCookie.setPath("/");
+        //設置 Cookie 的作用範圍為整個應用的所有路徑。
+        
+        response.addCookie(jwtCookie);
+        //response.addCookie(jwtCookie)：將這個 Cookie 添加到 HTTP 響應中，返回給客戶端。
+
+        return "redirect:/home";
     }
 
 }

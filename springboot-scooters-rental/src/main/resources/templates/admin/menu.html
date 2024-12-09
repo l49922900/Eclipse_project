@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css">
+</head>
+<body>
+    <div th:fragment="menuFragment">
+<!--   
+body 和 menuFragment 是 片段名稱（fragment name），可以根據需要命名以引用特定的 HTML 片段。
+並可重複使用，片段名稱是透過 Thymeleaf 的 th:fragment 屬性來定義的。
+
+定義好的片段可以在其他模板中使用 th:replace 或 th:include 屬性進行引用。
+ -->
+
+    
+        <div style="background-color: #dddddd">
+            <div style="padding: 10px">
+				<a th:href="@{/scooter}" class="button-secondary pure-button">首頁</a>
+				<a th:href="@{/scooter/admin-filter-menu}" class="button-secondary pure-button">車輛總覽</a>
+				<a th:href="@{https://www.youtube.com/}" class="button-secondary pure-button">車輛維修</a>
+				<a th:href="@{https://www.youtube.com/}" class="button-secondary pure-button">訂單管理</a>
+				<a th:href="@{https://www.youtube.com/}" class="button-secondary pure-button">使用者管理</a>
+				
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
