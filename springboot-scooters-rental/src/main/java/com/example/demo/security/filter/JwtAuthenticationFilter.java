@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,11 +32,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	
 	
 	
-	@Autowired
-    private  JwtUtils jwtUtils;
-	
-	@Autowired
-    private  UserServiceImpl userServiceImpl;
+	private final JwtUtils jwtUtils;
+    private final UserServiceImpl userServiceImpl;
+
+    public JwtAuthenticationFilter(JwtUtils jwtUtils, @Lazy UserServiceImpl userServiceImpl) {
+        this.jwtUtils = jwtUtils;
+        this.userServiceImpl = userServiceImpl;
+    }
 
 
 

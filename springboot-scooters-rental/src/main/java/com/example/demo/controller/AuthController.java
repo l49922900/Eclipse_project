@@ -1,7 +1,12 @@
 package com.example.demo.controller;
 
+import java.io.Console;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +36,9 @@ public class AuthController {
     
     @Autowired
     private JwtUtils jwtUtils;
+    
+    @Autowired
+    private AuthenticationManager authenticationManager;
     
 
     // 顯示註冊頁面
@@ -96,38 +104,38 @@ public class AuthController {
         Model model, 
         HttpServletResponse response
     ) {
-        //用戶登入並取得 JWT
-    	// Spring Security 將自動處理認證
-        
-        // 生成 JWT
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //從 Spring Security 的上下文中獲取當前用戶的認證資訊。        
-        
-        String token = jwtUtils.generateToken(authentication.getName(),authentication.getAuthorities());
-        //使用工具類生成 JWT（JSON Web Token）
-        
+        try {
+            // 創建認證對象
+            UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
 
-        // 將 JWT 設置為 Cookie
-        Cookie jwtCookie = new Cookie("Authorization", token);
-        //創建一個名為 Authorization 的 Cookie，值為生成的 JWT。
-        
-        
-        jwtCookie.setHttpOnly(true);
-        //設置這個 Cookie 為 HTTP-only，防止客戶端 JavaScript 訪問（增強安全性）。
-        
-        jwtCookie.setHttpOnly(true); 
-        // 防止 JavaScript 訪問
-        
-        jwtCookie.setSecure(true);   
-        // 僅允許 HTTPS
-        
-        jwtCookie.setPath("/");
-        //設置 Cookie 的作用範圍為整個應用的所有路徑。
-        
-        response.addCookie(jwtCookie);
-        //response.addCookie(jwtCookie)：將這個 Cookie 添加到 HTTP 響應中，返回給客戶端。
+            // 認證
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-        return "redirect:/home";
+            // 生成 JWT Token
+            String token = jwtUtils.generateToken(authentication.getName(), authentication.getAuthorities());
+            
+            
+            // 將 JWT 設置為 Cookie
+            Cookie jwtCookie = new Cookie("Authorization", token);
+            jwtCookie.setHttpOnly(true);
+          //設置這個 Cookie 為 HTTP-only，防止客戶端 JavaScript 訪問（增強安全性）
+            
+            jwtCookie.setSecure(true);
+            //// 僅允許 HTTPS
+            
+            jwtCookie.setPath("/");
+            ////設置 Cookie 的作用範圍為整個應用的所有路徑
+            
+            response.addCookie(jwtCookie);
+            // //response.addCookie(jwtCookie)：將這個 Cookie 添加到 HTTP 響應中，返回給客戶端
+            
+
+            return "redirect:/home";
+        } catch (AuthenticationException e) {
+            model.addAttribute("error", "登入失敗");
+            return "user/login";
+        }
     }
 
 }
