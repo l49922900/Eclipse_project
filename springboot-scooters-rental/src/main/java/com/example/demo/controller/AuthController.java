@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.example.demo.model.RegistrationRequest;
 import com.example.demo.model.dto.LoginRequest;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.security.utils.JwtUtils;
 import com.example.demo.service.impl.UserServiceImpl;
 
 import jakarta.servlet.http.Cookie;
@@ -34,8 +33,6 @@ public class AuthController {
     @Autowired
     private UserServiceImpl UserService;
     
-    @Autowired
-    private JwtUtils jwtUtils;
     
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -88,9 +85,10 @@ public class AuthController {
     }
     
     
+    
     @GetMapping("/login")
     public String showLoginPage() {
-        return "user/login"; // 返回你自訂的登入頁面
+        return "user/login"; // 到你自訂的登入頁面
     }
     
     @GetMapping("/home")
@@ -98,44 +96,5 @@ public class AuthController {
         return "user/home"; // 假設有 home.html 頁面
     }
     
-    @PostMapping("/login")
-    public String login(
-        @ModelAttribute LoginRequest loginRequest, 
-        Model model, 
-        HttpServletResponse response
-    ) {
-        try {
-            // 創建認證對象
-            UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-
-            // 認證
-            Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
-            // 生成 JWT Token
-            String token = jwtUtils.generateToken(authentication.getName(), authentication.getAuthorities());
-            
-            
-            // 將 JWT 設置為 Cookie
-            Cookie jwtCookie = new Cookie("Authorization", token);
-            jwtCookie.setHttpOnly(true);
-          //設置這個 Cookie 為 HTTP-only，防止客戶端 JavaScript 訪問（增強安全性）
-            
-            jwtCookie.setSecure(true);
-            //// 僅允許 HTTPS
-            
-            jwtCookie.setPath("/");
-            ////設置 Cookie 的作用範圍為整個應用的所有路徑
-            
-            response.addCookie(jwtCookie);
-            // //response.addCookie(jwtCookie)：將這個 Cookie 添加到 HTTP 響應中，返回給客戶端
-            
-
-            return "redirect:/home";
-        } catch (AuthenticationException e) {
-            model.addAttribute("error", "登入失敗");
-            return "user/login";
-        }
-    }
 
 }

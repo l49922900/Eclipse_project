@@ -10,9 +10,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.demo.security.filter.JwtAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
@@ -27,11 +27,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
     
     
     @Bean
@@ -47,7 +42,9 @@ public class SecurityConfig {
         http
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/register", "/login").permitAll()
-            .anyRequest().authenticated()
+            .requestMatchers("/admin/**").hasRole("admin") // 僅允許管理員存取
+            .anyRequest().hasAnyRole("admin", "user") // 其他請求只允許普通使用者存取
+//            .anyRequest().authenticated()
         )
         .formLogin(form -> form
             .loginPage("/login") // 自訂登入頁面
@@ -55,11 +52,7 @@ public class SecurityConfig {
             .defaultSuccessUrl("/home", true) // 登入成功後的頁面
             .failureUrl("/login?error=true") // 登入失敗後的頁面
             .permitAll()
-        )
-        .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // 禁用 Session
-            )
-            .addFilterAt(jwtAuthenticationFilter, BasicAuthenticationFilter.class); // 將過濾器正確放在這裡
+        );
 /*
 
 */

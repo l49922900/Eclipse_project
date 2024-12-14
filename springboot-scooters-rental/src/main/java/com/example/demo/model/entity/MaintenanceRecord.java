@@ -16,7 +16,7 @@ import com.example.demo.model.entity.Scooter.Status;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "MaintenanceRecords")
+@Table(name = "maintenancerecords")
 public class MaintenanceRecord implements Serializable {
 
     @Id

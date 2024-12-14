@@ -25,7 +25,8 @@ import com.example.demo.service.validation.AdvancedValidation;
 import com.example.demo.service.validation.BasicValidation;
 
 @Controller
-@RequestMapping(value = {"/scooter", "/scooters"})
+//@RequestMapping(value = {"/scooter", "/scooters"})
+@RequestMapping(value = {"/admin/scooter", "/admin/scooters"})
 /*
 @RequestMapping(value = {"/scooter", "/scooters"}):
 
@@ -187,5 +188,12 @@ Spring MVC 中的一個介面，主要負責在控制器 (Controller) 與視圖 
         return "admin/error";
     }
     
+    /*
+    維修頁面:
+    
+		功能:選擇維修日期
+		功能:維修資訊(如修了什麼地方等)填寫
+
+     */
     
 }

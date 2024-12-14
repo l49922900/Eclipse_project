@@ -9,7 +9,7 @@ import com.example.demo.model.entity.User;
 import java.util.Collection;
 import java.util.Collections;
 
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails {
 
     private final User user; // 這是你自定義的 User 類別
 
@@ -17,38 +17,38 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
-    @Override
+    
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 這裡返回的是角色權限（例如 "ROLE_USER", "ROLE_ADMIN"）
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name().toUpperCase()));
     }
 
-    @Override
+    
     public String getPassword() {
         return user.getPasswordHash(); // 返回密碼哈希
     }
 
-    @Override
+    
     public String getUsername() {
         return user.getUsername(); // 返回用戶名稱
     }
 
-    @Override
+    
     public boolean isAccountNonExpired() {
         return user.getAccountStatus() == User.AccountStatus.active; // 根據帳號狀態判斷
     }
 
-    @Override
+    
     public boolean isAccountNonLocked() {
         return user.getAccountStatus() == User.AccountStatus.active; // 根據帳號狀態判斷
     }
 
-    @Override
+    
     public boolean isCredentialsNonExpired() {
         return true; // 如果密碼過期的情況，這邊可以根據需求調整
     }
 
-    @Override
+   
     public boolean isEnabled() {
         return user.getAccountStatus() == User.AccountStatus.active; // 根據帳號狀態判斷
     }

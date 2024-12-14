@@ -12,8 +12,14 @@ RoomRepositoryJdbc 使用傳統 JDBC（Java Database Connectivity）來操作資
 
 package com.example.demo.repository;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import com.example.demo.model.entity.Reservation;
 import com.example.demo.model.entity.Scooter;
 
 public interface ScooterRepositoryJdbc {
 	int update(Scooter scooter);
+
+	List<Reservation> findConflictingRentalsDays(Integer scooterId, LocalDate startDate, LocalDate endDate);
 }

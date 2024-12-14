@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.demo.model.dto.ScooterDto;
+import com.example.demo.model.entity.Reservation;
 import com.example.demo.model.entity.Scooter.Status;
 
 public interface ScooterService {

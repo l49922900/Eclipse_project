@@ -1,29 +1,28 @@
-package com.example.demo.model.entity;
+package com.example.demo.model.dto;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+
+import com.example.demo.model.entity.Reservation;
+import com.example.demo.model.entity.Scooter;
+import com.example.demo.model.entity.User;
+import com.example.demo.model.entity.Reservation.PaymentStatus;
+import com.example.demo.model.entity.Reservation.Status;
+
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import com.example.demo.model.entity.Scooter.Status;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "reservations")
-public class Reservation {
+public class ReservationDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	
     private Integer reservationId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+
+    private Integer userId;
 /*
 將屬性定義為 User :
 
@@ -43,39 +42,25 @@ JPA 使用 @JoinColumn 指定外鍵名稱，例如：
 這樣可以確保 JPA 在操作時知道這個關聯對應到資料庫的哪個欄位。
  */
     
-    @ManyToOne
-    @JoinColumn(name = "scooter_id", nullable = false)
-    private Scooter scooter;
+    private Integer scooterId;
 
-    @Column(nullable = false)
+
     private LocalDate reservationDate;
 
-    @Column(nullable = false)
+
     private LocalDate startDate;
 
-    @Column(nullable = false)
+
     private LocalDate endDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "ENUM('reserved', 'completed', 'canceled') DEFAULT 'reserved'")
+
     private Status status = Status.reserved;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "ENUM('pending', 'paid', 'refunded', 'canceled') DEFAULT 'pending'")
+
     private PaymentStatus paymentStatus = PaymentStatus.pending;
 
     private LocalDate paymentDate;
 
-    @Column(nullable = false, precision = 10)
+
     private double totalAmount;
-
-    public enum Status {
-    	reserved, completed, canceled
-    }
-
-    public enum PaymentStatus {
-    	pending,paid, refunded, canceled
-    }
-
 }
-

@@ -17,7 +17,7 @@ import com.example.demo.model.entity.Reservation.Status;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "AdminActions")
+@Table(name = "adminactions")
 public class AdminAction implements Serializable {
 
     @Id

@@ -11,15 +11,19 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.ScooterDataAccessException;
 import com.example.demo.exception.ScooterException;
 import com.example.demo.exception.ScooterNotFoundException;
 import com.example.demo.mapper.ScooterMapper;
 import com.example.demo.model.dto.ScooterDto;
+import com.example.demo.model.entity.Reservation;
 import com.example.demo.model.entity.Scooter;
 import com.example.demo.model.entity.Scooter.Status;
 import com.example.demo.repository.ScooterRepository;
 import com.example.demo.repository.ScooterRepositoryJdbc;
+import com.example.demo.repository.impl.ScooterRepositoryJdbcImpl;
 import com.example.demo.service.ScooterService;
+
 
 
 
@@ -34,6 +38,15 @@ public class ScooterServiceImpl implements ScooterService {
 
     @Autowired
     private ScooterMapper scooterMapper;
+    
+
+    
+// // 檢查特定機車是否在日期範圍內可用
+//    private boolean isScooterAvailableInDateRange(Long scooterId, LocalDate startDate, LocalDate endDate) {
+//        return ScooterRepositoryJdbcImpl.findConflictingRentals(scooterId, startDate, endDate).isEmpty();
+//    }
+    
+    
 
     @Override
     public List<ScooterDto> getAllScooters() {
@@ -147,8 +160,11 @@ public class ScooterServiceImpl implements ScooterService {
                 .filter(scooter -> dailyRate == null || dailyRate.isEmpty() || 
                                    scooter.getDailyRate() == (Double.parseDouble(dailyRate)))
                 .filter(scooter -> scooter.getStatus().name().equals("available") )
+                //.filter(scooter -> isScooterAvailableInDateRange(scooter.getId(), startDate, endDate)) // 新增日期範圍檢查
                 .map(scooterMapper::toDto)
                 .collect(Collectors.toList());
     }
+    
+
 
 }

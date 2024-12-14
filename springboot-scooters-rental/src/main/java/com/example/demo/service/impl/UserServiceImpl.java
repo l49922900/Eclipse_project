@@ -47,13 +47,13 @@ public class UserServiceImpl implements UserService,UserDetailsManager {
      // 從資料庫中獲取角色
         String role = user.getRole().name(); // 假設角色儲存在 `role` 欄位
         
-        
         // 建立 Spring Security 的 UserDetails 實例
         return org.springframework.security.core.userdetails.User
             .withUsername(user.getUsername())
             .password(user.getPasswordHash())
             .roles(role) // 預設角色，可以根據需要客製化
             .build();
+        
 	}
 
 	@Override
