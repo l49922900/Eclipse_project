@@ -40,9 +40,6 @@ import com.example.demo.service.validation.BasicValidation;
 	透過 @RequestMapping，可以將前綴提取出來，減少重複工作。
  */
 
-
-
-
 /*
 為什麼要分成"/scooter", "/scooters":
 
@@ -146,7 +143,7 @@ Spring MVC 中的一個介面，主要負責在控制器 (Controller) 與視圖 
         
         
         scooterService.updateScooter(scooterId, scooterDto);
-        return "redirect:/scooters";
+        return "redirect:/admin/scooters";
     }
     
     
@@ -165,21 +162,6 @@ Spring MVC 中的一個介面，主要負責在控制器 (Controller) 與視圖 
 
     }
 
-    
-    @GetMapping("/home")
-    public String getHome() {
-        // 返回對應的 Thymeleaf 頁面名稱
-        return "user/home";
-    }
-    
-    
-    @GetMapping("/user-filter")
-    public String filterScooters(String type,String cc,String dailyRate,Model modelAttr) {
-
-            List<ScooterDto> filteredScooters = scooterService.filterScooters(type, cc, dailyRate);
-            modelAttr.addAttribute("scooters", filteredScooters);
-            return "user/home";
-    }
     
     @ExceptionHandler({ScooterException.class})
     public String handleScooterException(ScooterException e, Model model) {

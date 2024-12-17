@@ -30,9 +30,9 @@
                         <td th:text="${scooterDto.status}"></td>
                         <td th:text="${scooterDto.conditionNote}"></td>
                         <td th:text="${scooterDto.lastMaintenanceDate}"></td>
-                        <td><a class="btn btn-success btn-sm" th:href="@{/scooter/{scooterId}(scooterId=${scooterDto.scooterId})}">編輯</a></td>
+                        <td><a class="btn btn-success btn-sm" th:href="@{/admin/scooter/{scooterId}(scooterId=${scooterDto.scooterId})}">編輯</a></td>
                         <td><a class="btn btn-warning btn-sm" th:href="@{https://www.youtube.com/watch?v=c-SOJsITLLs}">維修</a></td>
-                        <td><a class="btn btn-danger btn-sm" th:href="@{/scooter/delete/{scooterId}(scooterId=${scooterDto.scooterId})}">刪除</a></td>
+                        <td><a class="btn btn-danger btn-sm" th:href="@{/admin/scooter/delete/{scooterId}(scooterId=${scooterDto.scooterId})}">刪除</a></td>
                     </tr>    
                 </tbody>
             </table>

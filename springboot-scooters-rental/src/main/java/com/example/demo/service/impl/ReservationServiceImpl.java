@@ -121,6 +121,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
     
     
+    //儲存預約
+    @Override
+    public void saveReservation(Reservation reservation) {
+        reservationRepository.save(reservation);
+    }
 
 
 

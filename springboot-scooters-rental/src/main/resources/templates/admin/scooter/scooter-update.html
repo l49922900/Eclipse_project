@@ -36,7 +36,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
                 <form class="needs-validation" th:object="${scooterDto}" 
-                    th:action="@{/scooter/update/{id}(id=${scooterDto.scooterId})}" 
+                    th:action="@{/admin/scooter/update/{id}(id=${scooterDto.scooterId})}" 
                     method="post" novalidate>
                     
                     <fieldset>

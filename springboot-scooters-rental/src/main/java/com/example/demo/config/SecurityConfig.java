@@ -41,10 +41,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/register", "/login").permitAll()
-            .requestMatchers("/admin/**").hasRole("admin") // 僅允許管理員存取
-            .anyRequest().hasAnyRole("admin", "user") // 其他請求只允許普通使用者存取
-//            .anyRequest().authenticated()
+            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .anyRequest().hasAnyRole("ADMIN", "USER")
         )
         .formLogin(form -> form
             .loginPage("/login") // 自訂登入頁面

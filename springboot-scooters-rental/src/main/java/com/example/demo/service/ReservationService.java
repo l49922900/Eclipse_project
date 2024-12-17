@@ -9,4 +9,5 @@ public interface ReservationService {
 	public void reserveScooter();
 	public double calculateRentalFee(int scooterId, LocalDate startDate, LocalDate endDate);
 	public boolean checkAvailability(int scooterId, LocalDate startDate, LocalDate endDate);
+	public void saveReservation(Reservation reservation);
 }

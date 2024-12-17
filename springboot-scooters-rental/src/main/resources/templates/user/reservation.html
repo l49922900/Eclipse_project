@@ -67,11 +67,17 @@
 			<strong>總租金:</strong> <span th:text="${totalRent}"></span>
 		</div>
 
-
 		<!-- 預約與購物車操作 -->
 		<div class="d-flex justify-content-center gap-3">
 			<button th:onclick="https://www.youtube.com/" class="btn btn-success">立即預約</button>
-			<button th:onclick="https://www.youtube.com/" class="btn btn-warning">加入購物車</button>
+			
+			<!-- 加入購物車表單 -->
+			<form th:action="@{/cart/add}" th:object="${reservation}" method="post">
+				<input type="hidden" th:field="*{scooterId}" />
+				<input type="hidden" th:field="*{startDate}" />
+				<input type="hidden" th:field="*{endDate}" />
+				<button type="submit" class="btn btn-warning">加入購物車</button>
+			</form>
 		</div>
 	</div>
 
