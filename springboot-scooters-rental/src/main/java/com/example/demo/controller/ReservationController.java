@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.exception.ReservationNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.dto.ReservationDto;
 import com.example.demo.model.dto.ScooterDto;
@@ -20,6 +22,7 @@ import com.example.demo.model.entity.Reservation;
 import com.example.demo.model.entity.Reservation.PaymentStatus;
 import com.example.demo.model.entity.Reservation.Status;
 import com.example.demo.model.entity.User;
+import com.example.demo.model.entity.User.Role;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ReservationService;
 import com.example.demo.service.ScooterService;
@@ -60,20 +63,6 @@ public class ReservationController {
 		this.userRepository = userRepository;
 	}
 	
-
-
-	@GetMapping("/reservation/{scooterId}")
-	public String showReservationPage(@PathVariable Integer scooterId,Model model) {
-		ScooterDto scooter = scooterService.getScooterById(scooterId);
-		 // 建立空的 ReservationForm 對象
-	    ReservationDto reservation = new ReservationDto();
-	    reservation.setScooterId(scooterId);
-		
-		model.addAttribute("scooter",scooter);
-		model.addAttribute("reservation", reservation);
-		return  "user/reservation";
-	}
-	
 	
 	@PostMapping("/reservation/calculate")
     public String calculateRental(@ModelAttribute("reservation") ReservationDto reservation, Model model) {
@@ -97,6 +86,56 @@ public class ReservationController {
 
         return "user/reservation";
     }
+	
+	//儲存預約
+    @PostMapping("/reservation/checkout")
+    public String checkout(HttpSession session, RedirectAttributes redirectAttributes, Authentication authentication) {
+        List<Reservation> cart = (List<Reservation>) session.getAttribute("cart");
+        if (cart == null || cart.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "購物車是空的，無法結帳！");
+            return "redirect:/cart";
+        }
+        
+        try {
+            // 取得當前登入的使用者
+            String username = authentication.getName();
+            User user = userRepository.findByUsername(username)
+                                      .orElseThrow(() -> new UserNotFoundException("User not found"));
+            
+            // 結帳過程
+            for (Reservation reservation : cart) {
+                reservation.setUser(user);
+                reservation.setPaymentStatus(PaymentStatus.pending);
+                reservation.setReservationDate(LocalDate.now());
+                reservation.setStatus(Status.reserved);
+                reservationService.saveReservation(reservation);
+            }
+            
+            // 清空購物車
+            session.removeAttribute("cart");
+            redirectAttributes.addFlashAttribute("successMessage", "結帳成功！");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "結帳失敗：" + e.getMessage());
+        }
+        
+        return "redirect:/home";
+    }
+	
+
+
+	//進入預約畫面
+    @GetMapping("/reservation/page/{scooterId}")
+	public String showReservationPage(@PathVariable Integer scooterId,Model model) {
+		ScooterDto scooter = scooterService.getScooterById(scooterId);
+		 // 建立空的 ReservationForm 對象
+	    ReservationDto reservation = new ReservationDto();
+	    reservation.setScooterId(scooterId);
+		
+		model.addAttribute("scooter",scooter);
+		model.addAttribute("reservation", reservation);
+		return  "user/reservation";
+	}
+	
 	
 	
 	 // 加入購物車方法
@@ -149,7 +188,10 @@ public class ReservationController {
     public String removeFromCart(@PathVariable Integer id, HttpSession session, RedirectAttributes redirectAttributes) {
         List<Reservation> cart = (List<Reservation>) session.getAttribute("cart");
         if (cart != null) {
-            cart.removeIf(reservation -> reservation.getReservationId().equals(id));
+        	cart.removeIf(reservation -> reservation.getReservationId().equals(id));
+            
+    
+            
             session.setAttribute("cart", cart);
             redirectAttributes.addFlashAttribute("successMessage", "成功移除購物車品項！");
         } else {
@@ -157,43 +199,84 @@ public class ReservationController {
         }
         return "redirect:/cart";
     }
-
     
-    //儲存預約
-    @PostMapping("/reservation/checkout")
-    public String checkout(HttpSession session, RedirectAttributes redirectAttributes, Authentication authentication) {
-        List<Reservation> cart = (List<Reservation>) session.getAttribute("cart");
-        if (cart == null || cart.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "購物車是空的，無法結帳！");
-            return "redirect:/cart";
-        }
+ // 顯示一般使用者或管理員的訂單
+    @GetMapping("/reservation/list")
+    public String listReservations(Model model, Authentication authentication) {
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                                  .orElseThrow(() -> new UserNotFoundException("User not found"));
         
+        List<Reservation> reservations;
+
+        // 若為管理員，則顯示所有訂單，否則只顯示當前使用者的訂單
+        if (user.getRole() == Role.admin) {
+            reservations = reservationService.findAllReservations();
+        } else {
+            reservations = reservationService.findReservationsByUser(user);
+        }
+
+        model.addAttribute("reservations", reservations);
+        return user.getRole() == Role.admin ? "admin/admin-reservations-list" : "user/user-reservations-list";
+    }
+    
+    
+ // 刪除預定
+    @GetMapping("/reservation/delete/{reservationId}")
+    public String deleteReservation(@PathVariable Integer reservationId, Authentication authentication, RedirectAttributes redirectAttributes) {
         try {
             // 取得當前登入的使用者
             String username = authentication.getName();
             User user = userRepository.findByUsername(username)
                                       .orElseThrow(() -> new UserNotFoundException("User not found"));
-            
-            // 結帳過程
-            for (Reservation reservation : cart) {
-                reservation.setUser(user);
-                reservation.setPaymentStatus(PaymentStatus.pending);
-                reservation.setPaymentDate(LocalDate.now());
-                reservation.setStatus(Status.reserved);
-                reservationService.saveReservation(reservation);
+
+            // 根據預定 ID 查找該預定
+            Reservation reservation = reservationService.findReservationById(reservationId)
+                                      .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
+
+            // 確認使用者是否為管理員或為該預定的擁有者            
+            if (user.getRole() == Role.admin || reservation.getUser().getUserId().equals(user.getUserId())) {
+                // 刪除預定
+                reservationService.deleteReservation(reservationId);
+                redirectAttributes.addFlashAttribute("successMessage", "預定成功刪除！");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "您無權刪除此預定！");
             }
-            
-            // 清空購物車
-            session.removeAttribute("cart");
-            redirectAttributes.addFlashAttribute("successMessage", "結帳成功！");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "結帳失敗：" + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "刪除預定時發生錯誤：" + e.getMessage());
         }
-        
-        return "redirect:/reservation/confirmation";
+
+        return "redirect:/reservation/list"; // 返回到預定列表頁面
     }
     
     
+    //顯示修改訂單頁面
+    @GetMapping("/reservation/update-page/{reservationId}")
+    public String showEditOrderPage(@PathVariable Integer reservationId, Model model) {
+        // 模擬從資料庫獲取訂單資料
+    	
+    	
+    	Reservation reservation = reservationService.findReservationById(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
+
+     // 獲取車輛資訊
+        ScooterDto scooter = scooterService.getScooterById(reservation.getScooter().getScooterId());
+        
+     // 計算試算金額
+        double totalRent = reservation.getTotalAmount();
+        long betweenDays = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()) + 1;
+       
+        
+        model.addAttribute("reservation", reservation);
+        model.addAttribute("scooter", scooter);
+        model.addAttribute("totalRent", totalRent);
+        model.addAttribute("rentalDays",betweenDays );
+        
+        return "user/user-reservation-update"; 
+        
+        
+    }
+
 
 
 }

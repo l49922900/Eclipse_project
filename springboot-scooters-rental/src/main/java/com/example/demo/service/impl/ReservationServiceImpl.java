@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,6 +93,10 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setUser(user);
         reservation.setTotalAmount(calculateRentalFee(scooterId, startDate, endDate));
 
+     // 使用 UUID 生成唯一識別碼
+        reservation.setReservationId(UUID.randomUUID().hashCode());
+        
+        
         cart.add(reservation);
         session.setAttribute("cart", cart);
     }
@@ -125,6 +130,29 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
+    }
+    
+ // 查詢所有訂單
+    @Override
+    public List<Reservation> findAllReservations() {
+        return reservationRepository.findAll();
+    }
+
+    // 查詢特定使用者的訂單
+    @Override
+    public List<Reservation> findReservationsByUser(User user) {
+        return reservationRepository.findByUser(user);
+    }
+    
+    
+    @Override
+    public void deleteReservation(Integer reservationId) {
+        reservationRepository.deleteById(reservationId);
+    }
+
+    @Override
+    public Optional<Reservation> findReservationById(Integer reservationId) {
+        return reservationRepository.findById(reservationId);
     }
 
 

@@ -74,7 +74,7 @@
                     <td th:text="${scooter.dailyRate}"></td>
                     <td>
                         <div class="d-flex justify-content-evenly">
-                            <a th:href="@{/reservation/{scooterId}(scooterId=${scooter.scooterId})}" class="btn btn-warning btn-sm">預約</a>                         
+                            <a th:href="@{/reservation/page/{scooterId}(scooterId=${scooter.scooterId})}" class="btn btn-warning btn-sm">預約</a>                         
                         </div>
                     </td>
                 </tr>

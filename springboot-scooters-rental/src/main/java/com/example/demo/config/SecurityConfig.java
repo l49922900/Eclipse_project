@@ -51,15 +51,6 @@ public class SecurityConfig {
             .failureUrl("/login?error=true") // 登入失敗後的頁面
             .permitAll()
         );
-/*
-
-*/
-
-
-    return http.build();
+   return http.build();
     }
-   
-    
-
-
 }
