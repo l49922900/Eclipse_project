@@ -40,11 +40,20 @@
 			<div class="card-body">
 				<form th:action="@{/reservation/calculate}"
 					th:object="${reservation}" method="post" class="row g-3">
+					
+					<!-- <input type="hidden" th:field="*{scooterId}" />   -->
+					
+					
 
-					<input type="hidden" th:field="*{scooter.scooterId}" />
-					<!-- <input type="hidden" th:field="*{reservation.scooterId}" />  -->
+					<input type="hidden" th:field="*{reservation.scooterId}" />
 					
 					<!-- 隱藏欄位，確保 scooterId 被傳回 -->
+					
+					<!-- <input type="hidden" th:field="*{scooter.scooterId}" /> --> 
+					
+					
+					
+					
 
 					<div class="col-md-6">
 						<label for="startDate" class="form-label">開始日期</label> <input

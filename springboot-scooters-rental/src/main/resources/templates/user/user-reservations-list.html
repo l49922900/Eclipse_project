@@ -24,7 +24,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="reservation : ${reservations}">
+                    <tr th:each="reservation : ${reservation}">
                         <td th:text="${reservation.scooter.licensePlate}">車牌號碼</td>
                         <td th:text="${reservation.scooter.model}">機車型號</td>
                         <td th:text="${reservation.startDate} + ' ~ ' + ${reservation.endDate}">租借日期</td>
@@ -37,7 +37,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(reservations)}">
+                    <tr th:if="${#lists.isEmpty(reservation)}">
                         <td colspan="6" class="text-center">無訂單記錄</td>
                     </tr>
                 </tbody>

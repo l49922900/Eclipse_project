@@ -27,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="reservation : ${reservations}">
+                    <tr th:each="reservation : ${reservation}">
                         <td th:text="${reservation.reservationId}">訂單編號</td>
                         <td th:text="${reservation.user.username}">使用者名稱</td>
                         <td th:text="${reservation.scooter.licensePlate}">車牌號碼</td>
@@ -43,7 +43,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(reservations)}">
+                    <tr th:if="${#lists.isEmpty(reservation)}">
                         <td colspan="9" class="text-center">無訂單記錄</td>
                     </tr>
                 </tbody>

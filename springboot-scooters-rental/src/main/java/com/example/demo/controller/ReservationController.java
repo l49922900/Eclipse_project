@@ -207,16 +207,16 @@ public class ReservationController {
         User user = userRepository.findByUsername(username)
                                   .orElseThrow(() -> new UserNotFoundException("User not found"));
         
-        List<Reservation> reservations;
+        List<Reservation> reservation;
 
         // 若為管理員，則顯示所有訂單，否則只顯示當前使用者的訂單
         if (user.getRole() == Role.admin) {
-            reservations = reservationService.findAllReservations();
+            reservation = reservationService.findAllReservations();
         } else {
-            reservations = reservationService.findReservationsByUser(user);
+            reservation = reservationService.findReservationsByUser(user);
         }
 
-        model.addAttribute("reservations", reservations);
+        model.addAttribute("reservation", reservation);
         return user.getRole() == Role.admin ? "admin/admin-reservations-list" : "user/user-reservations-list";
     }
     
