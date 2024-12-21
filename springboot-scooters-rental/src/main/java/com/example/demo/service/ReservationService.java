@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.model.dto.ReservationDto;
 import com.example.demo.model.entity.Reservation;
 import com.example.demo.model.entity.User;
 
@@ -18,4 +19,5 @@ public interface ReservationService {
 	public List<Reservation> findReservationsByUser(User user);
 	public void deleteReservation(Integer reservationId);
 	public Optional<Reservation> findReservationById(Integer reservationId);
+	public void updateReservation(ReservationDto reservationDto);
 }

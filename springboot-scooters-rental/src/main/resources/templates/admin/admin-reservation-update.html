@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理員訂單更改</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- 頁面標題 -->
+        <h1 class="text-center mb-4">管理員訂單更改</h1>
+
+        <!-- 訂單詳細資訊 -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">訂單詳細資訊</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>訂單編號:</strong> <span th:text="${reservation.reservationId}"></span></p>
+                <p><strong>車輛編號:</strong> <span th:text="${reservation.scooterId}"></span></p>
+                <p><strong>機車型號:</strong> <span th:text="${scooter.model}"></span></p>
+                <p><strong>車牌號碼:</strong> <span th:text="${scooter.licensePlate}"></span></p>
+                <p><strong>預訂日期:</strong> <span th:text="${reservation.reservationDate}"></span></p>
+                <p><strong>每日租金:</strong> <span th:text="${scooter.dailyRate}"></span></p>
+            </div>
+        </div>
+
+        <!-- 租金計算結果 -->
+        <div class="alert alert-info text-center mb-4" th:if="${totalAmount}">
+            <strong>租借天數:</strong> <span th:text="${rentalDays}"></span> 天 <br>
+            <strong>總租金:</strong> <span th:text="${totalAmount}"></span>
+        </div>
+
+        <!-- 租金計算表單 -->
+    <form th:action="@{/reservation/admin-calculate}" method="post" class="row g-3 mb-4">
+        <input type="hidden" name="reservationId" th:value="${reservation.reservationId}">
+        <input type="hidden" name="scooterId" th:value="${reservation.scooterId}">
+        
+        <div class="col-md-6">
+            <label for="startDate" class="form-label">開始日期</label>
+            <input type="date" id="startDate" name="startDate" class="form-control" 
+                   th:value="${reservation.startDate}" required>
+        </div>
+
+        <div class="col-md-6">
+            <label for="endDate" class="form-label">結束日期</label>
+            <input type="date" id="endDate" name="endDate" class="form-control" 
+                   th:value="${reservation.endDate}" required>
+        </div>
+
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-info">計算租金</button>
+        </div>
+    </form>
+
+    <!-- 更新訂單表單 -->
+    <form th:action="@{/reservation/update}" method="post" class="row g-3" th:object="${reservation}">
+        <input type="hidden" th:field="*{reservationId}">
+        <input type="hidden" th:field="*{scooterId}">
+        <input type="hidden" th:field="*{startDate}">
+        <input type="hidden" th:field="*{endDate}">
+        <input type="hidden" th:field="*{totalAmount}">
+
+        <div class="col-md-6">
+            <label for="status" class="form-label">訂單狀態</label>
+            <select id="status" class="form-select" th:field="*{status}" required>
+                <option value="reserved" th:selected="${reservation.status == 'reserved'}">已預約</option>
+                <option value="completed" th:selected="${reservation.status == 'completed'}">已完成</option>
+                <option value="canceled" th:selected="${reservation.status == 'canceled'}">已取消</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label for="paymentStatus" class="form-label">付款狀態</label>
+            <select id="paymentStatus" class="form-select" th:field="*{paymentStatus}" required>
+                <option value="pending" th:selected="${reservation.paymentStatus == 'pending'}">待付款</option>
+                <option value="paid" th:selected="${reservation.paymentStatus == 'paid'}">已付款</option>
+            </select>
+        </div>
+
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary">更新訂單</button>
+            <a href="/reservation/list" class="btn btn-secondary">返回列表</a>
+        </div>
+    </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

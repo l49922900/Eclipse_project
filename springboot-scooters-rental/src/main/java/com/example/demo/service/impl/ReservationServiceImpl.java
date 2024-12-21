@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.exception.ScooterNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.exception.ReservationNotFoundException;
+import com.example.demo.model.dto.ReservationDto;
 import com.example.demo.model.entity.Reservation;
 import com.example.demo.model.entity.Scooter;
 import com.example.demo.model.entity.User;
@@ -154,6 +156,31 @@ public class ReservationServiceImpl implements ReservationService {
     public Optional<Reservation> findReservationById(Integer reservationId) {
         return reservationRepository.findById(reservationId);
     }
+    
+    
+    @Override
+    public void updateReservation(ReservationDto reservationDto) {
+        Reservation reservation = reservationRepository.findById(reservationDto.getReservationId())
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
+
+        reservation.setStatus(reservationDto.getStatus());
+        reservation.setPaymentStatus(reservationDto.getPaymentStatus());
+        
+        
+        double totalAmount =  calculateRentalFee(reservation.getScooter().getScooterId(),reservationDto.getStartDate(),reservationDto.getEndDate());
+        
+        // 更新日期
+        reservation.setStartDate(reservationDto.getStartDate());
+        reservation.setEndDate(reservationDto.getEndDate());
+        reservation.setTotalAmount(totalAmount);
+        
+        
+   
+        
+
+        reservationRepository.save(reservation);
+    }
+
 
 
 

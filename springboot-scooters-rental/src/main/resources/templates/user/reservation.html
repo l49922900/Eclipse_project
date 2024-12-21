@@ -32,6 +32,11 @@
 			</div>
 		</div>
 
+		<div class="alert alert-danger text-center"
+			th:if="${errorMessage != null and !errorMessage.isEmpty()}"
+			th:text="${errorMessage}">
+		</div>
+
 		<!-- 日期選擇 -->
 		<div class="card mb-4">
 			<div class="card-header bg-secondary text-white">
@@ -41,7 +46,8 @@
 				<form th:action="@{/reservation/calculate}"
 					th:object="${reservation}" method="post" class="row g-3">
 
-					<input type="hidden" th:field="*{scooterId}" />
+					<input type="hidden" th:field="*{scooterId}" /> 
+					<input type="hidden" name="source" value="reservationPage" />
 					<!-- 隱藏欄位，確保 scooterId 被傳回 -->
 
 					<div class="col-md-6">
@@ -62,20 +68,21 @@
 		</div>
 
 		<!-- 租金計算結果 -->
-		<div class="alert alert-info text-center mb-4" th:if="${totalRent}">
+		<div class="alert alert-info text-center mb-4" th:if="${totalAmount}">
 			<strong>租借天數:</strong> <span th:text="${rentalDays}"></span> 天 <br>
-			<strong>總租金:</strong> <span th:text="${totalRent}"></span>
+			<strong>總租金:</strong> <span th:text="${totalAmount}"></span>
 		</div>
 
 		<!-- 預約與購物車操作 -->
 		<div class="d-flex justify-content-center gap-3">
 			<button th:onclick="https://www.youtube.com/" class="btn btn-success">立即預約</button>
-			
+
 			<!-- 加入購物車表單 -->
-			<form th:action="@{/cart/add}" th:object="${reservation}" method="post">
-				<input type="hidden" th:field="*{scooterId}" />
-				<input type="hidden" th:field="*{startDate}" />
-				<input type="hidden" th:field="*{endDate}" />
+			<form th:action="@{/cart/add}" th:object="${reservation}"
+				method="post">
+				<input type="hidden" th:field="*{scooterId}" /> <input
+					type="hidden" th:field="*{startDate}" /> <input type="hidden"
+					th:field="*{endDate}" />
 				<button type="submit" class="btn btn-warning">加入購物車</button>
 			</form>
 		</div>

@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.example.demo.exception.ReservationNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
@@ -28,6 +32,7 @@ import com.example.demo.service.ReservationService;
 import com.example.demo.service.ScooterService;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
 /*
 車輛預約頁面:
@@ -49,13 +54,14 @@ import jakarta.servlet.http.HttpSession;
 
  */
 
-
+@Slf4j
 @Controller
 public class ReservationController {
 	
 	private final ScooterService scooterService;
 	private final ReservationService reservationService;
-	private final UserRepository userRepository;	
+	private final UserRepository userRepository;
+	private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
 	
 	public ReservationController(ScooterService scooterService,ReservationService reservationService,UserRepository userRepository) {
 		this.scooterService = scooterService;
@@ -65,7 +71,7 @@ public class ReservationController {
 	
 	
 	@PostMapping("/reservation/calculate")
-    public String calculateRental(@ModelAttribute("reservation") ReservationDto reservation, Model model) {
+    public String calculateRental(@ModelAttribute("reservation") ReservationDto reservation, @RequestParam("source") String source,Model model) {
         // 從表單中取得 startDate 和 endDate
         LocalDate startDate = reservation.getStartDate();
         LocalDate endDate = reservation.getEndDate();
@@ -75,17 +81,71 @@ public class ReservationController {
         
         
         // 計算租金
-        double totalRent = reservationService.calculateRentalFee(reservation.getScooterId(), startDate, endDate);
+        double totalAmount = reservationService.calculateRentalFee(reservation.getScooterId(), startDate, endDate);
 
         // 將總租金與預約資訊、預約天數傳回給頁面
         model.addAttribute("rentalDays", rentalDays);
-        model.addAttribute("totalRent", totalRent);
+        model.addAttribute("totalAmount", totalAmount);
         model.addAttribute("reservation", reservation);
         ScooterDto scooter = scooterService.getScooterById(reservation.getScooterId());
         model.addAttribute("scooter", scooter);
 
-        return "user/reservation";
+//        return "user/reservation";
+     
+        // 根據來源頁面進行重導
+        if ("userUpdatePage".equals(source)) {
+            return "user/user-reservation-update"; // 修改頁面
+        } else if ("reservationPage".equals(source)) {
+            return "user/reservation"; // 預約頁面
+        }else if(source.equals(null)) {
+        	return "admin/admin-reservation-update";
+		}
+        
+     // 預設重導
+        return "redirect:/home";
     }
+	
+	
+	@PostMapping("/reservation/admin-calculate")
+	public String calculateRental(@RequestParam Integer reservationId,
+	                            @RequestParam Integer scooterId,
+	                            @RequestParam LocalDate startDate,
+	                            @RequestParam LocalDate endDate,
+	                            Model model) {
+	    
+	    // 計算租借天數
+	    long rentalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+	    
+	    // 計算租金
+	    double totalAmount = reservationService.calculateRentalFee(scooterId, startDate, endDate);
+	    
+	    // 獲取原始預約資訊
+	    Reservation reservation = reservationService.findReservationById(reservationId)
+	            .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
+	            
+	    // 創建 DTO 並設置新的日期和金額
+	    ReservationDto reservationDto = new ReservationDto();
+	    reservationDto.setReservationId(reservationId);
+	    reservationDto.setScooterId(scooterId);
+	    reservationDto.setStartDate(startDate);
+	    reservationDto.setEndDate(endDate);
+	    reservationDto.setStatus(reservation.getStatus());
+	    reservationDto.setPaymentStatus(reservation.getPaymentStatus());
+	    reservationDto.setTotalAmount(totalAmount);
+	    
+	    // 獲取機車資訊
+	    ScooterDto scooter = scooterService.getScooterById(scooterId);
+	    
+	    // 添加所需資訊到 Model
+	    model.addAttribute("reservation", reservationDto);
+	    model.addAttribute("scooter", scooter);
+	    model.addAttribute("rentalDays", rentalDays);
+	    model.addAttribute("totalAmount", totalAmount);
+	    
+	    return "admin/admin-reservation-update";
+	}
+	
+	
 	
 	//儲存預約
     @PostMapping("/reservation/checkout")
@@ -147,6 +207,13 @@ public class ReservationController {
     	
     	
     	try {
+    		
+    		boolean isAvailable = reservationService.checkAvailability(reservation.getScooterId(), reservation.getStartDate(), reservation.getEndDate());
+            if (!isAvailable) {
+                redirectAttributes.addFlashAttribute("errorMessage", "該日期區間已被預訂，請選擇其他日期！");
+                return "redirect:/reservation/page/" + reservation.getScooterId();
+            }
+    		
     		// 取得當前登入使用者的 username
             String username = authentication.getName();
 
@@ -252,29 +319,61 @@ public class ReservationController {
     
     //顯示修改訂單頁面
     @GetMapping("/reservation/update-page/{reservationId}")
-    public String showEditOrderPage(@PathVariable Integer reservationId, Model model) {
+    public String showUpdateReservationPage(@PathVariable Integer reservationId, Model model, Authentication authentication) {
         // 模擬從資料庫獲取訂單資料
     	
     	
-    	Reservation reservation = reservationService.findReservationById(reservationId)
+    	Reservation reservationEntity = reservationService.findReservationById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
 
      // 獲取車輛資訊
-        ScooterDto scooter = scooterService.getScooterById(reservation.getScooter().getScooterId());
+        ScooterDto scooter = scooterService.getScooterById(reservationEntity.getScooter().getScooterId());
         
      // 計算試算金額
-        double totalRent = reservation.getTotalAmount();
-        long betweenDays = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()) + 1;
+        double totalAmount = reservationEntity.getTotalAmount();
+        long betweenDays = ChronoUnit.DAYS.between(reservationEntity.getStartDate(), reservationEntity.getEndDate()) + 1;
        
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                                  .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        
+        
+        ReservationDto reservation = new ReservationDto();
+        reservation.setReservationId(reservationEntity.getReservationId());
+        reservation.setUserId(reservationEntity.getUser().getUserId());  // 手動設定 UserId
+        reservation.setScooterId(reservationEntity.getScooter().getScooterId());  // 手動設定 ScooterId
+        reservation.setReservationDate(reservationEntity.getReservationDate());
+        reservation.setStartDate(reservationEntity.getStartDate());
+        reservation.setEndDate(reservationEntity.getEndDate());
+        reservation.setStatus(reservationEntity.getStatus());
+        reservation.setPaymentStatus(reservationEntity.getPaymentStatus());
+        reservation.setTotalAmount(reservationEntity.getTotalAmount());
+        
         
         model.addAttribute("reservation", reservation);
         model.addAttribute("scooter", scooter);
-        model.addAttribute("totalRent", totalRent);
+        model.addAttribute("totalAmount", totalAmount);
         model.addAttribute("rentalDays",betweenDays );
         
-        return "user/user-reservation-update"; 
+//        return "user/user-reservation-update"; 
+        return user.getRole() == Role.admin ? "admin/admin-reservation-update" : "user/user-reservation-update";
         
         
+    }
+    
+    
+    @PostMapping("/reservation/update")
+    public String updateReservation(@ModelAttribute ReservationDto reservationDto, RedirectAttributes redirectAttributes) {
+    	
+    	try {
+            reservationService.updateReservation(reservationDto);
+            redirectAttributes.addFlashAttribute("successMessage", "預約更新成功！");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "更新失敗：" + e.getMessage());
+            log.error("Update failed", e);  // 添加這行來記錄錯誤日誌
+        }
+        return "redirect:/reservation/list";
     }
 
 
