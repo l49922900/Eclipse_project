@@ -93,19 +93,14 @@ public class Scooter implements Serializable {
     @Column(name = "last_maintenance_date")
     private LocalDate lastMaintenanceDate;
     
-    @Column(nullable = false)
-    private Integer usageCount = 0;
-    
  // 一對多關係: 與 Reservation
     @OneToMany(mappedBy = "scooter")
     private List<Reservation> reservations = new ArrayList<>();
 //這個list可以用在當我們需要用Scooter查詢他的Reservation時
     
     
-
-    // 一對多關係: 與 MaintenanceRecord
-    @OneToMany(mappedBy = "scooter", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MaintenanceRecord> maintenanceRecords = new ArrayList<>();
+    @Column(name = "image_path")
+    private String imagePath;
 
 
     public enum Status {

@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="editModalLabel">編輯車輛</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <form th:action="@{/admin/scooter/update}" method="post">
+        <input type="hidden" name="scooterId" th:value="${scooter.scooterId}" />
+        <div class="mb-3">
+            <label for="licensePlate" class="form-label">車牌</label>
+            <input type="text" class="form-control" id="licensePlate" name="licensePlate" th:value="${scooter.licensePlate}" />
+        </div>
+        <div class="mb-3">
+            <label for="model" class="form-label">車型</label>
+            <input type="text" class="form-control" id="model" name="model" th:value="${scooter.model}" />
+        </div>
+        <!-- 其他字段 -->
+        <button type="submit" class="btn btn-primary">保存變更</button>
+    </form>
+</div>

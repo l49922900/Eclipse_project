@@ -1,36 +1,253 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Scooter</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* 調整表單和列表的高度與佈局 */
-        .scooter-form {
-            max-width: 400px;
-        }
-        .scooter-list {
-            overflow-x: auto;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>管理員首頁 - Scooter Rental</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+.scooter-card {
+	margin-bottom: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s;
+}
+
+.scooter-card:hover {
+	transform: scale(1.05);
+}
+
+.scooter-card img {
+	max-height: 800px;
+	object-fit: cover;
+}
+
+.scooter-info {
+	padding: 15px;
+}
+
+</style>
 </head>
 <body>
-    <!-- 菜單列的包含文件 -->
-    <div th:replace="admin/menu :: menuFragment"></div>
+	<div th:replace="fragments/menu :: menu"></div>
 
-    <!-- 主體內容 -->
-    <div class="container my-4">
-        <div class="row">
-            <!-- 新增 Scooter 表單，寬度調整為 1/3 -->
-            <div class="col-lg-4 col-md-5 scooter-form" th:include="admin/scooter/scooter-form :: scooterForm"></div>
 
-            <!-- Scooter 列表，寬度調整為 2/3 -->
-            <div class="col-lg-8 col-md-7 scooter-list" th:include="admin/scooter/scooter-list :: scooterList"></div>
-        </div>
-    </div>
+	<div class="container mt-4">
+		<h1 class="text-center">車輛管理</h1>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- 車輛篩選表單 -->
+		<form th:action="@{/admin/scooters/filter}" method="get"
+			class="row g-3 mb-4">
+			<div class="col-md-3">
+				<label for="type" class="form-label">車型</label> <select id="type"
+					name="type" class="form-select">
+					<option value="" selected>全部車型</option>
+					<option value="scooter">速可達</option>
+					<option value="manual">檔車</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label for="cc" class="form-label">CC數</label> <select id="cc"
+					name="cc" class="form-select">
+					<option value="" selected>全部</option>
+					<option value="100">100</option>
+					<option value="125">125</option>
+					<option value="150">150</option>
+					<option value="200">200</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label for="status" class="form-label">狀態</label> <select
+					id="status" name="status" class="form-select">
+					<option value="" selected>全部狀態</option>
+					<option value="available">可用</option>
+					<option value="rented">出租中</option>
+					<option value="maintenance">維修中</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label for="dailyRate" class="form-label">日租價格</label> <select
+					id="dailyRate" name="dailyRate" class="form-select">
+					<option value="" selected>全部</option>
+					<option value="300">300</option>
+					<option value="400">400</option>
+					<option value="500">500</option>
+					<option value="600">600</option>
+				</select>
+			</div>
+			<div class="col-12 text-center">
+				<button type="submit" class="btn btn-primary">篩選</button>
+				<a th:href="@{/admin/scooters}" class="btn btn-secondary">重置</a>
+			</div>
+		</form>
+
+		<!-- 搜尋結果卡片 -->
+		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+			<div class="col" th:each="scooter : ${scooterDtos}">
+				<div class="card scooter-card">
+					<img th:src="@{${scooter.imagePath}}" class="card-img-top"
+						alt="Scooter Image">
+					<div class="scooter-info">
+						<p class="card-text">
+							車牌號碼: <span th:text="${scooter.licensePlate}"></span>
+						</p>
+						<p class="card-text">
+							車輛 ID: <span th:text="${scooter.scooterId}"></span>
+						</p>
+						<p class="card-text">
+							車種: <span th:text="${scooter.model}"></span>
+						</p>
+						<p class="card-text">
+							引擎排氣量 (cc): <span th:text="${scooter.cc}"></span>
+						</p>
+						<p class="card-text">
+							類型: <span th:text="${scooter.type}"></span>
+						</p>
+						<p class="card-text">
+							日租費率: <span th:text="${scooter.dailyRate}"></span> 元
+						</p>
+						<p class="card-text">
+							狀態: <span th:text="${scooter.status}"></span>
+						</p>
+						<p class="card-text">
+							車況描述: <span th:text="${scooter.conditionNote}"></span>
+						</p>
+						<p class="card-text">
+							上次保養日期: <span th:text="${scooter.lastMaintenanceDate}"></span>
+						</p>
+						<div class="d-flex justify-content-between">
+							<a th:href="@{/admin/scooters/{id}(id=${scooter.scooterId})}"
+								class="btn btn-primary btn-sm"> 維修 </a> <a
+								th:href="@{/admin/scooters/delete/{id}(id=${scooter.scooterId})}"
+								class="btn btn-danger btn-sm"
+								onclick="return confirm('確定要刪除嗎？')">刪除</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 新增車輛按鈕 -->
+		<div class="text-center mt-4">
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+				data-bs-target="#addModal">新增車輛</button>
+		</div>
+
+		<!-- 新增車輛彈出窗口 -->
+		<div class="modal fade" id="addModal" tabindex="-1"
+			aria-labelledby="addModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addModalLabel">新增車輛</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form class="needs-validation" method="post"
+							th:object="${scooterDto}" th:action="@{/admin/scooter}"
+							enctype="multipart/form-data" novalidate>
+							<fieldset>
+								<input type="hidden" th:field="*{scooterId}" />
+
+								<div class="mb-3">
+									<label for="licensePlate" class="form-label">車牌號碼:</label> <input
+										type="text" class="form-control" th:field="*{licensePlate}"
+										id="licensePlate" required />
+									<div th:if="${#fields.hasErrors('licensePlate')}"
+										class="invalid-feedback" th:errors="*{licensePlate}"></div>
+								</div>
+
+								<div class="mb-3">
+									<label for="model" class="form-label">機車型號:</label> <input
+										type="text" class="form-control" th:field="*{model}"
+										id="model" required />
+									<div th:if="${#fields.hasErrors('model')}"
+										class="invalid-feedback" th:errors="*{model}"></div>
+								</div>
+
+								<div class="mb-3">
+									<label for="cc" class="form-label">引擎排氣量 (cc):</label> <select
+										class="form-select" th:field="*{cc}" id="cc" required>
+										<option value="100">100</option>
+										<option value="125">125</option>
+										<option value="150">150</option>
+										<option value="200">200</option>
+									</select>
+									<div th:if="${#fields.hasErrors('cc')}"
+										class="invalid-feedback" th:errors="*{cc}"></div>
+								</div>
+
+								<div class="mb-3">
+									<label for="type" class="form-label">車種:</label> <select
+										class="form-select" th:field="*{type}" id="type" required>
+										<option value="scooter">速可達(scooter)</option>
+										<option value="manual">檔車(Manual Motorcycle)</option>
+									</select>
+									<div th:if="${#fields.hasErrors('type')}"
+										class="invalid-feedback" th:errors="*{type}"></div>
+								</div>
+
+								<div class="mb-3">
+									<label for="dailyRate" class="form-label">日租費率:</label> <select
+										class="form-select" th:field="*{dailyRate}" id="dailyRate"
+										required>
+										<option value="300">300</option>
+										<option value="400">400</option>
+										<option value="500">500</option>
+										<option value="600">600</option>
+									</select>
+									<div th:if="${#fields.hasErrors('dailyRate')}"
+										class="invalid-feedback" th:errors="*{dailyRate}"></div>
+								</div>
+
+								<div class="mb-3">
+									<label for="status" class="form-label">狀態:</label> <select
+										class="form-select" th:field="*{status}" id="status" required>
+										<option value="available">可用(available)</option>
+										<option value="rented">已租借(rented)</option>
+										<option value="maintenance">維修中(maintenance)</option>
+									</select>
+									<div th:if="${#fields.hasErrors('status')}"
+										class="invalid-feedback" th:errors="*{status}"></div>
+								</div>
+
+								<div class="mb-3">
+									<label for="conditionNote" class="form-label">車況描述:</label> <input
+										type="text" class="form-control" th:field="*{conditionNote}"
+										id="conditionNote" required />
+									<div th:if="${#fields.hasErrors('conditionNote')}"
+										class="invalid-feedback" th:errors="*{conditionNote}"></div>
+								</div>
+
+								<div class="mb-3">
+									<label for="lastMaintenanceDate" class="form-label">上次保養日期:</label>
+									<input type="date" class="form-control"
+										th:field="*{lastMaintenanceDate}" id="lastMaintenanceDate"
+										required />
+									<div th:if="${#fields.hasErrors('lastMaintenanceDate')}"
+										class="invalid-feedback" th:errors="*{lastMaintenanceDate}"></div>
+								</div>
+
+								<div class="mb-3">
+									<label for="imageFile" class="form-label">車輛圖片:</label> <input
+										type="file" class="form-control" id="addImageFile"
+										name="imageFile" accept="image/*" required />
+
+								</div>
+
+								<button type="submit" class="btn btn-primary">新增</button>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

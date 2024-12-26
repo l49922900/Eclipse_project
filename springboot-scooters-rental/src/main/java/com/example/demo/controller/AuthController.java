@@ -36,7 +36,7 @@ public class AuthController {
     
     @Autowired
     private AuthenticationManager authenticationManager;
-    
+
 
     // 顯示註冊頁面
     @GetMapping("/register")

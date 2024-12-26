@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -11,17 +12,16 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.exception.ScooterDataAccessException;
 import com.example.demo.exception.ScooterException;
 import com.example.demo.exception.ScooterNotFoundException;
 import com.example.demo.mapper.ScooterMapper;
 import com.example.demo.model.dto.ScooterDto;
-import com.example.demo.model.entity.Reservation;
 import com.example.demo.model.entity.Scooter;
 import com.example.demo.model.entity.Scooter.Status;
+import com.example.demo.model.entity.ScooterPart;
+import com.example.demo.repository.ScooterPartRepository;
 import com.example.demo.repository.ScooterRepository;
 import com.example.demo.repository.ScooterRepositoryJdbc;
-import com.example.demo.repository.impl.ScooterRepositoryJdbcImpl;
 import com.example.demo.service.ScooterService;
 
 
@@ -38,6 +38,10 @@ public class ScooterServiceImpl implements ScooterService {
 
     @Autowired
     private ScooterMapper scooterMapper;
+    
+    @Autowired
+    
+    private ScooterPartRepository scooterPartRepository;
     
 
     
@@ -65,27 +69,34 @@ public class ScooterServiceImpl implements ScooterService {
 
    
     @Override
-    public void addScooter(ScooterDto scooterDto) {
-//        Optional<Scooter> optScooter = scooterRepository.findById(scooterDto.getScooterId());
-//        if (optScooter.isPresent()) {
-//            throw new ScooterAlreadyExistsException("新增失敗: 機車 " + scooterDto.getScooterId() + " 已存在");
-//        }
+    public Scooter addScooter(ScooterDto scooterDto) {
 
         Scooter scooter = scooterMapper.toEntity(scooterDto);
-        Scooter isScooternull = scooterRepository.save(scooter);
-        if(Objects.isNull(isScooternull)) {
+        Scooter scooterSave = scooterRepository.save(scooter);
+        if(Objects.isNull(scooterSave)) {
         	throw new ScooterException("無法新增機車");
         }
+        return scooterSave;
     }
+    
+//    @Override
+//    public Scooter addScooter(ScooterDto scooterDto) {
+//
+//        Scooter scooter = scooterMapper.toEntity(scooterDto);
+//        Scooter sccooterSave = scooterRepository.save(scooter);
+//        
+//        return sccooterSave;
+//    }
+    
 
     @Override
     public void addScooter(Integer scooterId, String licensePlate, String model, Integer cc, String type, Status status,
-                           Double dailyRate, String conditionNote, LocalDate lastMaintenanceDate) {
-        ScooterDto scooterDto = new ScooterDto(scooterId, licensePlate, model, cc, type, status, dailyRate, conditionNote, lastMaintenanceDate);
+                           Double dailyRate, String conditionNote, LocalDate lastMaintenanceDate,String imagePath) {
+        ScooterDto scooterDto = new ScooterDto(scooterId, licensePlate, model, cc, type, status, dailyRate, conditionNote, lastMaintenanceDate,imagePath);
         scooterDto.setScooterId(null);
         addScooter(scooterDto);
     }
-
+    
     @Override
     public void updateScooter(Integer scooterId, ScooterDto scooterDto) {
         Optional<Scooter> optScooter = scooterRepository.findById(scooterId);
@@ -93,6 +104,14 @@ public class ScooterServiceImpl implements ScooterService {
             throw new ScooterNotFoundException("修改失敗: 機車 " + scooterId + " 不存在");
         }
 
+        
+        // 若沒有新上傳圖片且 DTO 中的圖片路徑為空，才使用原圖片路徑
+        if (scooterDto.getImagePath() == null || scooterDto.getImagePath().trim().isEmpty()) {
+            scooterDto.setImagePath(optScooter.get().getImagePath());
+        }
+
+        
+        
         scooterDto.setScooterId(scooterId);
         Scooter scooter = scooterMapper.toEntity(scooterDto);
         int rowcount = scooterRepositoryJdbc.update(scooter);
@@ -103,8 +122,8 @@ public class ScooterServiceImpl implements ScooterService {
 
     @Override
     public void updateScooter(Integer scooterId, String licensePlate, String model, Integer cc, String type, Status status,
-            Double dailyRate, String conditionNote, LocalDate lastMaintenanceDate) {
-        ScooterDto scooterDto = new ScooterDto(scooterId, licensePlate, model, cc, type, status, dailyRate, conditionNote, lastMaintenanceDate);
+            Double dailyRate, String conditionNote, LocalDate lastMaintenanceDate,String imagePath) {
+        ScooterDto scooterDto = new ScooterDto(scooterId, licensePlate, model, cc, type, status, dailyRate, conditionNote, lastMaintenanceDate,imagePath);
         updateScooter(scooterId, scooterDto);
     }
 
@@ -164,7 +183,15 @@ public class ScooterServiceImpl implements ScooterService {
                 .map(scooterMapper::toDto)
                 .collect(Collectors.toList());
     }
-    
+   
+    public void initializationAddPart(Scooter scooter) {
+        List<ScooterPart> parts = List.of(
+                new ScooterPart(null, scooter, "輪胎", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null,null),
+                new ScooterPart(null, scooter, "引擎", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null,null),
+                new ScooterPart(null, scooter, "電瓶", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null,null),
+                new ScooterPart(null, scooter, "大燈", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null,null)
+        );
 
-
+        scooterPartRepository.saveAll(parts);
+    }
 }

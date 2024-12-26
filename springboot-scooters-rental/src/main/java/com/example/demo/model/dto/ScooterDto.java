@@ -8,6 +8,7 @@ import com.example.demo.model.entity.Scooter.Status;
 import com.example.demo.service.validation.AdvancedValidation;
 import com.example.demo.service.validation.BasicValidation;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -59,4 +60,6 @@ public class ScooterDto {
 	private String conditionNote;
 
 	private LocalDate lastMaintenanceDate;
+
+    private String imagePath;
 }

@@ -77,7 +77,7 @@ public interface ScooterRepository extends JpaRepository<Scooter,Integer>{
 	/*
 	當繼承了 JpaRepository（JPA的高階介面）後，Spring Data JPA 會根據方法名稱自動生成對應的 SQL 查詢語句。
 	
-	方法名稱解析：
+	例子：
 
 		findByRoomSizeGreaterThan 是根據命名規則來構建的，Spring Data JPA 能夠識別並自動生成對應的 SQL 查詢。
 		RoomSize 是要查詢的屬性名稱（對應到 Room 實體中的 roomSize 屬性）。

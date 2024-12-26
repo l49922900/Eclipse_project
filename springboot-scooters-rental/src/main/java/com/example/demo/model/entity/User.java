@@ -62,6 +62,9 @@ public class User implements Serializable {
 	使用者可以透過 User.getReservations() 獲取該使用者的所有預約，實現更方便的業務邏輯。
  */
     
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PartMaintenance> partMaintenances = new ArrayList<>();
+
     
     
 

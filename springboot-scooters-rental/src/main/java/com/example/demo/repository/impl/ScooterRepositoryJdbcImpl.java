@@ -62,7 +62,7 @@ public class ScooterRepositoryJdbcImpl implements ScooterRepositoryJdbc  {
 	    System.out.println(scooter.getStatus());
 		
 	    try {
-	    	return jdbcTemplate.update(updateSql,scooter.getLicensePlate(),scooter.getModel(),scooter.getCc(),scooter.getType(),scooter.getStatus().name(),scooter.getDailyRate(),scooter.getConditionNote(),scooter.getLastMaintenanceDate(),scooter.getScooterId());
+	    	return jdbcTemplate.update(updateSql,scooter.getLicensePlate(),scooter.getModel(),scooter.getCc(),scooter.getType(),scooter.getStatus().name(),scooter.getDailyRate(),scooter.getConditionNote(),scooter.getLastMaintenanceDate(),scooter.getImagePath(),scooter.getScooterId());
 		} catch (Exception e) {
 			 // 紀錄異常並拋出自定義異常
 			log.error("Error updating scooter with ID {}: {}", scooter.getScooterId(), e.getMessage(), e);
