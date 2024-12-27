@@ -186,10 +186,10 @@ public class ScooterServiceImpl implements ScooterService {
    
     public void initializationAddPart(Scooter scooter) {
         List<ScooterPart> parts = List.of(
-                new ScooterPart(null, scooter, "輪胎", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null,null),
-                new ScooterPart(null, scooter, "引擎", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null,null),
-                new ScooterPart(null, scooter, "電瓶", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null,null),
-                new ScooterPart(null, scooter, "大燈", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null,null)
+                new ScooterPart(null, scooter, "輪胎", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null),
+                new ScooterPart(null, scooter, "引擎", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null),
+                new ScooterPart(null, scooter, "電瓶", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null),
+                new ScooterPart(null, scooter, "大燈", ScooterPart.PartStatus.normal, LocalDate.now(), new ArrayList<>(),null)
         );
 
         scooterPartRepository.saveAll(parts);

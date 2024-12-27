@@ -25,7 +25,6 @@
 .scooter-info {
 	padding: 15px;
 }
-
 </style>
 </head>
 <body>
@@ -117,10 +116,13 @@
 						</p>
 						<div class="d-flex justify-content-between">
 							<a th:href="@{/admin/scooters/{id}(id=${scooter.scooterId})}"
-								class="btn btn-primary btn-sm"> 維修 </a> <a
+								class="btn btn-primary btn-sm"> 編輯 </a> <a
+								th:href="@{/admin/maintenance/scooter/{id}(id=${scooter.scooterId})}"
+								class="btn btn-primary btn-sm">維修</a> <a
 								th:href="@{/admin/scooters/delete/{id}(id=${scooter.scooterId})}"
 								class="btn btn-danger btn-sm"
 								onclick="return confirm('確定要刪除嗎？')">刪除</a>
+
 						</div>
 					</div>
 				</div>

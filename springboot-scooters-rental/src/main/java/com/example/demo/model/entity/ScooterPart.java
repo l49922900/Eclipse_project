@@ -58,9 +58,7 @@ public class ScooterPart implements Serializable {
     @Column(name = "part_note", length = 255)
     private String partNote;
     
-    
-    @Column(name = "is_active")
-    private Boolean isActive = true;  // 標記當前是否為使用中的部件
+
 
     public enum PartStatus {
         normal, damaged

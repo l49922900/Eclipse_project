@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>維修紀錄查詢</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="container mt-4">
+        <h1 class="text-center">維修紀錄查詢</h1>
+
+        <!-- 搜尋表單 -->
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <form th:action="@{/admin/maintenance/search}" method="get" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">零件ID</label>
+                            <input type="text" name="partId" class="form-control" th:value="${param.partId}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">使用者ID</label>
+                            <input type="text" name="userId" class="form-control" th:value="${param.userId}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">維修日期</label>
+                            <input type="date" name="actionDate" class="form-control" th:value="${param.actionDate}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">維修類型</label>
+                            <select name="actionType" class="form-select">
+                                <option value="">全部</option>
+                                <option th:each="type : ${actionTypes}"
+                                        th:value="${type}"
+                                        th:text="${type}"
+                                        th:selected="${param.actionType == type}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary me-2">查詢</button>
+                        <a href="/admin/maintenance/search" class="btn btn-secondary">重置</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 查詢結果表格 -->
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>維修ID</th>
+                        <th>零件ID</th>
+                        <th>維修人員</th>
+                        <th>維修類型</th>
+                        <th>維修日期</th>
+                        <th>備註</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="maintenance : ${maintenances}">
+                        <td th:text="${maintenance.maintenanceId}"></td>
+                        <td th:text="${maintenance.scooterPart.partId}"></td>
+                        <td th:text="${maintenance.admin.userId}"></td>
+                        <td th:text="${maintenance.actionType}"></td>
+                        <td th:text="${#temporals.format(maintenance.actionDate, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${maintenance.notes}"></td>
+                    </tr>
+                    <tr th:if="${maintenances == null || #lists.isEmpty(maintenances)}">
+                        <td colspan="6" class="text-center">查無紀錄</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

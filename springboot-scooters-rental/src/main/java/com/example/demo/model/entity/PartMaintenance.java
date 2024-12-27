@@ -43,7 +43,7 @@ public class PartMaintenance implements Serializable {
     private User admin;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "action_type", columnDefinition = "ENUM('repair', 'replace') NOT NULL")
+    @Column(name = "action_type", columnDefinition = "ENUM('repair', 'replace','report') NOT NULL")
     private ActionType actionType;
 
     @Column(name = "action_date")
@@ -53,7 +53,7 @@ public class PartMaintenance implements Serializable {
     private String notes;
 
     public enum ActionType {
-        repair, replace
+        repair, replace,report
     }
 }
 
