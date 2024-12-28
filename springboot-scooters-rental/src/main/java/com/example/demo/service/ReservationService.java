@@ -13,7 +13,8 @@ public interface ReservationService {
 	public void addToCart(int scooterId, LocalDate startDate, LocalDate endDate,int userId);
 	public void reserveScooter();
 	public double calculateRentalFee(int scooterId, LocalDate startDate, LocalDate endDate);
-	public boolean checkAvailability(int scooterId, LocalDate startDate, LocalDate endDate);
+	public boolean checkAvailability(int scooterId, LocalDate startDate, 
+	        LocalDate endDate, Integer currentReservationId);
 	public void saveReservation(Reservation reservation);
 	public List<Reservation> findAllReservations();
 	public List<Reservation> findReservationsByUser(User user);

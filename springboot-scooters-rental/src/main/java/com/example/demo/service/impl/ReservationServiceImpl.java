@@ -43,14 +43,15 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private UserRepository userRepository;
     
-    //確認車輛預約日期是否有衝突   
+ // Service 方法
     @Override
-    public boolean checkAvailability(int scooterId, LocalDate startDate, LocalDate endDate) {
-    	List<Reservation> conflictingRentals = scooterRepositoryJdbc.findConflictingRentalsDays(
-                scooterId, startDate, endDate);
+    public boolean checkAvailability(int scooterId, LocalDate startDate, 
+        LocalDate endDate, Integer currentReservationId) {
+        List<Reservation> conflictingRentals = scooterRepositoryJdbc
+            .findConflictingRentalsDays(scooterId, startDate, endDate, currentReservationId);
         return conflictingRentals.isEmpty();
     }
-    
+
     
     // 計算租金
     @Override
@@ -83,7 +84,7 @@ public class ReservationServiceImpl implements ReservationService {
         
         
         // 檢查可用性
-        if (!checkAvailability(scooterId, startDate, endDate)) {
+        if (!checkAvailability(scooterId, startDate, endDate,null)) {
             throw new IllegalArgumentException("Scooter is not available for the selected dates.");
         }
 

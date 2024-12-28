@@ -21,5 +21,6 @@ import com.example.demo.model.entity.Scooter;
 public interface ScooterRepositoryJdbc {
 	int update(Scooter scooter);
 
-	List<Reservation> findConflictingRentalsDays(Integer scooterId, LocalDate startDate, LocalDate endDate);
+	public List<Reservation> findConflictingRentalsDays(Integer scooterId, 
+		    LocalDate startDate, LocalDate endDate, Integer currentReservationId);
 }

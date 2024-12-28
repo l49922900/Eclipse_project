@@ -34,7 +34,7 @@ form {
 </head>
 <body>
 	<!-- 菜單列 -->
-	<div th:replace="/admin/menu :: menuFragment"></div>
+	<div th:replace="fragments/menu :: menu"></div>
 
 	<!-- 主體內容 -->
 	<div class="container mt-4">
@@ -45,7 +45,7 @@ form {
 					method="post"  enctype="multipart/form-data" novalidate>
 
 					<fieldset>
-						<legend class="mb-3">機車維修</legend>
+						<legend class="mb-3">機車資訊更新</legend>
 
 						<!-- 機車ID (只讀) -->
 						<div class="mb-3">
@@ -62,6 +62,10 @@ form {
 							<div th:if="${#fields.hasErrors('licensePlate')}"
 								class="text-danger" th:errors="*{licensePlate}"></div>
 						</div>
+
+
+						<!--隱藏的 status 欄位 -->
+						<input type="hidden" th:field="*{status}">
 
 						<!-- 機車型號 -->
 						<div class="mb-3">
@@ -107,19 +111,6 @@ form {
 							<div th:if="${#fields.hasErrors('dailyRate')}"
 								class="text-danger" th:errors="*{dailyRate}"></div>
 						</div>
-
-						<!-- 狀態 -->
-						<div class="mb-3">
-							<label for="status" class="form-label">狀態:</label> <select
-								class="form-select" id="status" th:field="*{status}">
-								<option value="available" th:text="#{status.available}">可租</option>
-								<option value="rented" th:text="#{status.rented}">已出租</option>
-								<option value="maintenance" th:text="#{status.maintenance}">維修中</option>
-							</select>
-							<div th:if="${#fields.hasErrors('status')}" class="text-danger"
-								th:errors="*{status}"></div>
-						</div>
-
 						<!-- 車況描述 -->
 						<div class="mb-3">
 							<label for="conditionNote" class="form-label">車況描述:</label>

@@ -90,7 +90,6 @@ public class ReservationController {
         ScooterDto scooter = scooterService.getScooterById(reservation.getScooterId());
         model.addAttribute("scooter", scooter);
 
-//        return "user/reservation";
      
         // 根據來源頁面進行重導
         if ("userUpdatePage".equals(source)) {
@@ -202,13 +201,10 @@ public class ReservationController {
     @PostMapping("/cart/add")
     public String addToCart(@ModelAttribute ReservationDto reservation, RedirectAttributes redirectAttributes, Authentication authentication) {
     	//RedirectAttributes 用來在進行重定向（redirect）時傳遞暫時性的訊息或屬性給下個頁面。
-        
-    	
-    	
-    	
+        	
     	try {
     		
-    		boolean isAvailable = reservationService.checkAvailability(reservation.getScooterId(), reservation.getStartDate(), reservation.getEndDate());
+    		boolean isAvailable = reservationService.checkAvailability(reservation.getScooterId(), reservation.getStartDate(), reservation.getEndDate(),null);
             if (!isAvailable) {
                 redirectAttributes.addFlashAttribute("errorMessage", "該日期區間已被預訂，請選擇其他日期！");
                 return "redirect:/reservation/page/" + reservation.getScooterId();
@@ -356,7 +352,6 @@ public class ReservationController {
         model.addAttribute("totalAmount", totalAmount);
         model.addAttribute("rentalDays",betweenDays );
         
-//        return "user/user-reservation-update"; 
         return user.getRole() == Role.admin ? "admin/admin-reservation-update" : "user/user-reservation-update";
         
         
@@ -364,9 +359,21 @@ public class ReservationController {
     
     
     @PostMapping("/reservation/update")
-    public String updateReservation(@ModelAttribute ReservationDto reservationDto, RedirectAttributes redirectAttributes) {
+    public String updateReservation(@ModelAttribute ReservationDto reservationDto, RedirectAttributes redirectAttributes, Authentication authentication) {
     	
     	try {
+    		String username = authentication.getName();
+            User user = userRepository.findByUsername(username)
+                                      .orElseThrow(() -> new UserNotFoundException("User not found"));
+    		
+    		boolean isAvailable = reservationService.checkAvailability(reservationDto.getScooterId(), reservationDto.getStartDate(), reservationDto.getEndDate(),reservationDto.getReservationId());
+            if (!isAvailable) {
+                redirectAttributes.addFlashAttribute("errorMessage", "該日期區間已被預訂，請選擇其他日期！");
+//                return user.getRole() == Role.admin ? "redirect:/admin/admin-reservation-update" : "redirect:/user/user-reservation-update";
+                return "redirect:/reservation/update-page/"+reservationDto.getReservationId();
+            }
+
+	
             reservationService.updateReservation(reservationDto);
             redirectAttributes.addFlashAttribute("successMessage", "預約更新成功！");
         } catch (Exception e) {

@@ -39,18 +39,10 @@ public class ScooterServiceImpl implements ScooterService {
     @Autowired
     private ScooterMapper scooterMapper;
     
-    @Autowired
-    
+    @Autowired   
     private ScooterPartRepository scooterPartRepository;
     
-
-    
-// // 檢查特定機車是否在日期範圍內可用
-//    private boolean isScooterAvailableInDateRange(Long scooterId, LocalDate startDate, LocalDate endDate) {
-//        return ScooterRepositoryJdbcImpl.findConflictingRentals(scooterId, startDate, endDate).isEmpty();
-//    }
-    
-    
+  
 
     @Override
     public List<ScooterDto> getAllScooters() {
@@ -72,6 +64,7 @@ public class ScooterServiceImpl implements ScooterService {
     public Scooter addScooter(ScooterDto scooterDto) {
 
         Scooter scooter = scooterMapper.toEntity(scooterDto);
+        scooter.setStatus(Status.available);
         Scooter scooterSave = scooterRepository.save(scooter);
         if(Objects.isNull(scooterSave)) {
         	throw new ScooterException("無法新增機車");
@@ -79,14 +72,6 @@ public class ScooterServiceImpl implements ScooterService {
         return scooterSave;
     }
     
-//    @Override
-//    public Scooter addScooter(ScooterDto scooterDto) {
-//
-//        Scooter scooter = scooterMapper.toEntity(scooterDto);
-//        Scooter sccooterSave = scooterRepository.save(scooter);
-//        
-//        return sccooterSave;
-//    }
     
 
     @Override
@@ -103,7 +88,6 @@ public class ScooterServiceImpl implements ScooterService {
         if (optScooter.isEmpty()) {
             throw new ScooterNotFoundException("修改失敗: 機車 " + scooterId + " 不存在");
         }
-
         
         // 若沒有新上傳圖片且 DTO 中的圖片路徑為空，才使用原圖片路徑
         if (scooterDto.getImagePath() == null || scooterDto.getImagePath().trim().isEmpty()) {

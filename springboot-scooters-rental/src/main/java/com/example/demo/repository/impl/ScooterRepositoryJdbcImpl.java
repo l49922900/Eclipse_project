@@ -78,15 +78,19 @@ public class ScooterRepositoryJdbcImpl implements ScooterRepositoryJdbc  {
 	
 	@Value("${scooter.sql.findConflictingRentals}")
 	private String findConflictingRentalsSql;
+
 	@Override
-	public List<Reservation> findConflictingRentalsDays(Integer scooterId, LocalDate startDate, LocalDate endDate) {	    
+	public List<Reservation> findConflictingRentalsDays(Integer scooterId, 
+	    LocalDate startDate, LocalDate endDate, Integer currentReservationId) {      
 	    try {
 	        return jdbcTemplate.query(
-	        		findConflictingRentalsSql,
-	            new BeanPropertyRowMapper<>(Reservation.class), 
-	            scooterId, 
-	            startDate, 
-	            endDate
+	            findConflictingRentalsSql,
+	            new BeanPropertyRowMapper<>(Reservation.class),
+	            scooterId,
+	            startDate,
+	            endDate,
+	            currentReservationId,
+	            currentReservationId  // 需要傳入兩次，因為 SQL 中使用了兩次
 	        );
 	    } catch (Exception e) {
 	        throw new ScooterDataAccessException("Failed to find conflicting rentals", e);

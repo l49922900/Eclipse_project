@@ -30,7 +30,7 @@
                             <input type="date" name="actionDate" class="form-control" th:value="${param.actionDate}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">維修類型</label>
+                            <label class="form-label">操作類型</label>
                             <select name="actionType" class="form-select">
                                 <option value="">全部</option>
                                 <option th:each="type : ${actionTypes}"
@@ -57,7 +57,7 @@
                         <th>維修ID</th>
                         <th>零件ID</th>
                         <th>維修人員</th>
-                        <th>維修類型</th>
+                        <th>操作類型</th>
                         <th>維修日期</th>
                         <th>備註</th>
                     </tr>

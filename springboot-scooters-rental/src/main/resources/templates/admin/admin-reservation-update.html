@@ -34,6 +34,11 @@
             <strong>租借天數:</strong> <span th:text="${rentalDays}"></span> 天 <br>
             <strong>總租金:</strong> <span th:text="${totalAmount}"></span>
         </div>
+        
+    <div class="alert alert-danger text-center"
+			th:if="${errorMessage != null and !errorMessage.isEmpty()}"
+			th:text="${errorMessage}">
+	</div>
 
         <!-- 租金計算表單 -->
     <form th:action="@{/reservation/admin-calculate}" method="post" class="row g-3 mb-4">

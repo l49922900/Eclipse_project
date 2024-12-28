@@ -83,22 +83,6 @@ public class ScooterController {
 // */
 //    }
 
-	@GetMapping("/test-auth")
-	public String testAuth(Model model) {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null) {
-			logger.info("Authentication: {}", auth);
-			logger.info("Principal: {}", auth.getPrincipal());
-			logger.info("Role: {}",auth.getAuthorities());
-			if (auth.getPrincipal() instanceof UserDetails) {
-				UserDetails userDetails = (UserDetails) auth.getPrincipal();
-				logger.info("Username: {}", userDetails.getUsername());
-			}
-		}
-		return "user/home";
-	}
-
 	@GetMapping
 	public String getScooters(Model model, @ModelAttribute ScooterDto scooterDto) {
 		// 查詢所有機車，顯示到 scooter/scooter 頁面

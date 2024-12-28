@@ -9,6 +9,8 @@
 	rel="stylesheet">
 </head>
 <body>
+	<div th:replace="fragments/menu :: menu"></div>
+
 	<div class="container my-4">
 		<!-- 訊息提示區 -->
 		<div th:if="${success}"

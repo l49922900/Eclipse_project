@@ -56,15 +56,6 @@
 				</select>
 			</div>
 			<div class="col-md-3">
-				<label for="status" class="form-label">狀態</label> <select
-					id="status" name="status" class="form-select">
-					<option value="" selected>全部狀態</option>
-					<option value="available">可用</option>
-					<option value="rented">出租中</option>
-					<option value="maintenance">維修中</option>
-				</select>
-			</div>
-			<div class="col-md-3">
 				<label for="dailyRate" class="form-label">日租價格</label> <select
 					id="dailyRate" name="dailyRate" class="form-select">
 					<option value="" selected>全部</option>
@@ -201,17 +192,6 @@
 									</select>
 									<div th:if="${#fields.hasErrors('dailyRate')}"
 										class="invalid-feedback" th:errors="*{dailyRate}"></div>
-								</div>
-
-								<div class="mb-3">
-									<label for="status" class="form-label">狀態:</label> <select
-										class="form-select" th:field="*{status}" id="status" required>
-										<option value="available">可用(available)</option>
-										<option value="rented">已租借(rented)</option>
-										<option value="maintenance">維修中(maintenance)</option>
-									</select>
-									<div th:if="${#fields.hasErrors('status')}"
-										class="invalid-feedback" th:errors="*{status}"></div>
 								</div>
 
 								<div class="mb-3">
