@@ -21,6 +21,9 @@
 			</div>
 			<div class="card-body">
 				<p>
+					<strong>機車ID:</strong> <span th:text="${scooter.scooterId}"></span>
+				</p>
+				<p>
 					<strong>車牌號碼:</strong> <span th:text="${scooter.licensePlate}"></span>
 				</p>
 				<p>
@@ -37,8 +40,7 @@
 
 		<div class="alert alert-danger text-center"
 			th:if="${errorMessage != null and !errorMessage.isEmpty()}"
-			th:text="${errorMessage}">
-		</div>
+			th:text="${errorMessage}"></div>
 
 		<!-- 日期選擇 -->
 		<div class="card mb-4">
@@ -49,8 +51,8 @@
 				<form th:action="@{/reservation/calculate}"
 					th:object="${reservation}" method="post" class="row g-3">
 
-					<input type="hidden" th:field="*{scooterId}" /> 
-					<input type="hidden" name="source" value="reservationPage" />
+					<input type="hidden" th:field="*{scooterId}" /> <input
+						type="hidden" name="source" value="reservationPage" />
 					<!-- 隱藏欄位，確保 scooterId 被傳回 -->
 
 					<div class="col-md-6">

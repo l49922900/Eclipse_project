@@ -21,6 +21,10 @@ public class CustomUserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 這裡返回的是角色權限（例如 "ROLE_USER", "ROLE_ADMIN"）
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name().toUpperCase()));
+    /*
+    使用 Collections.singletonList 返回一個只有單一元素的集合。
+	SimpleGrantedAuthority 是 GrantedAuthority 的一個簡單實現類，用於表示角色。
+     */
     }
 
     

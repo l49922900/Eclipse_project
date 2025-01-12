@@ -21,7 +21,9 @@
 				<thead class="table-dark">
 					<tr>
 						<th>訂單編號</th>
+						<th>使用者ID</th>
 						<th>使用者名稱</th>
+						<th>車牌ID</th>
 						<th>車牌號碼</th>
 						<th>機車型號</th>
 						<th>租借日期</th>
@@ -34,7 +36,9 @@
 				<tbody>
 					<tr th:each="reservation : ${reservation}">
 						<td th:text="${reservation.reservationId}">訂單編號</td>
-						<td th:text="${reservation.user.username}">使用者名稱</td>
+						<td th:text="${reservation.user.userId}">使用者ID</td>
+						<td th:text="${reservation.user.username}">使用者名稱</td>												
+						<td th:text="${reservation.scooter.scooterId}">車牌ID</td>
 						<td th:text="${reservation.scooter.licensePlate}">車牌號碼</td>
 						<td th:text="${reservation.scooter.model}">機車型號</td>
 						<td

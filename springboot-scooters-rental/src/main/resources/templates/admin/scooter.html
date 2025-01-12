@@ -65,6 +65,19 @@
 					<option value="600">600</option>
 				</select>
 			</div>
+			
+			
+			
+			<div class="col-md-3">
+				<label for="status" class="form-label">車輛狀態</label> <select
+					id="status" name="status" class="form-select">
+					<option value="" selected>全部</option>
+					<option value="available">available</option>
+					<option value="maintenance">maintenance</option>
+				</select>
+			</div>
+			
+			
 			<div class="col-12 text-center">
 				<button type="submit" class="btn btn-primary">篩選</button>
 				<a th:href="@{/admin/scooters}" class="btn btn-secondary">重置</a>

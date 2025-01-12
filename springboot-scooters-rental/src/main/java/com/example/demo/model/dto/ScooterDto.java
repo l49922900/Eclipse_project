@@ -40,9 +40,6 @@ public class ScooterDto {
 	private String model;
 
 
-//	@Positive(message = "{scooterDto.cc.positive}")
-//	@Min(value = 1, message = "{scooterDto.cc.positive}")
-	//@NotBlank(message = "{scooterDto.cc.notNull}")
 	@Range(min = 1, max = 999999999, message = "{scooterDto.cc.range}",groups = AdvancedValidation.class)
 	@NotNull(message = "{scooterDto.cc.notNull}",groups = BasicValidation.class)
 	private Integer cc;
@@ -51,8 +48,6 @@ public class ScooterDto {
 
 	private Status status;
 
-//	@Positive(message = "{scooterDto.dailyRate.positive}")
-//	@Min(value = 1, message = "{scooterDto.dailyRate.positive}")
 	@Range(min = 1, max = 999999999, message = "{scooterDto.dailyRate.range}",groups = AdvancedValidation.class)
 	@NotNull(message = "{scooterDto.dailyRate.notNull}",groups = BasicValidation.class)
 	private double dailyRate;

@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.RegistrationRequest;
 import com.example.demo.model.dto.LoginRequest;
+import com.example.demo.model.entity.User;
+import com.example.demo.model.entity.User.Role;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.impl.UserServiceImpl;
 
@@ -91,9 +94,21 @@ public class AuthController {
         return "user/login"; // 到你自訂的登入頁面
     }
     
+    
+    @GetMapping("/user-home")
+    public String showUserHomePage() {
+
+        return "user/home";
+    }
+    
+    
     @GetMapping("/home")
-    public String showHomePage() {
-        return "user/home"; // 假設有 home.html 頁面
+    public String showHomePage(Authentication authentication) {
+    	String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                                  .orElseThrow(() -> new UserNotFoundException("User not found"));
+    	
+        return user.getRole() == Role.admin ? "redirect:/admin/scooter" : "user/home";
     }
     
 

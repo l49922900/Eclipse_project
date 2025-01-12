@@ -1,48 +1,45 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<nav th:fragment="menu" class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-brand" href="/admin/scooter">MyGO!!</a>
-        <a sec:authorize="hasRole('ROLE_USER')" class="navbar-brand" href="/home">MyGO!!</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav" aria-controls="navbarNav"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <!-- 管理員選項 -->
-                <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
-                    <a class="nav-link" href="/admin/scooter">首頁</a>
-                </li>
-                <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
-                    <a class="nav-link" href="/reservation/list">所有訂單管理</a>
-                </li>
-                <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
-                    <a class="nav-link" href="/admin/members">會員管理</a>
-                </li>
-                <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
-                    <a class="nav-link" href="/admin/maintenance/search">維修紀錄</a>
-                </li>
-                <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
-                    <a class="nav-link" href="/admin/member-records">後台操作紀錄</a>
-                </li>
+<nav th:fragment="menu"
+	class="navbar navbar-expand-lg navbar-light bg-light">
+	<div class="container-fluid">
+		<a sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-brand"
+			href="/admin/scooter">MyGO!!</a> <a
+			sec:authorize="hasRole('ROLE_USER')" class="navbar-brand"
+			href="/home">MyGO!!</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+			data-bs-target="#navbarNav" aria-controls="navbarNav"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ms-auto">
+				<!-- 管理員選項 -->
+				<li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item"><a
+					class="nav-link" href="/admin/scooter">管理員首頁</a></li>
+				<li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item"><a
+					class="nav-link" href="/user-home">一般會員首頁</a></li>
+				<li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item"><a
+					class="nav-link" href="/reservation/list">所有訂單管理</a></li>
+				<li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item"><a
+					class="nav-link" href="/admin/members">會員管理</a></li>
+				<li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item"><a
+					class="nav-link" href="/admin/maintenance/search">維修紀錄</a></li>
+				<li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item"><a
+					class="nav-link" href="/admin/member-records">後台操作紀錄</a></li>
 
-                <!-- 會員選項 -->
-                <li sec:authorize="hasRole('ROLE_USER')" class="nav-item">
-                    <a class="nav-link" href="/home">首頁</a>
-                </li>
-                <li sec:authorize="hasRole('ROLE_USER')" class="nav-item">
-                    <a class="nav-link" href="/reservation/list">訂單管理</a>
-                </li>
-                <li sec:authorize="hasRole('ROLE_USER')" class="nav-item">
-                    <a class="nav-link" href="/user/account">我的帳戶</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+				<!-- 會員選項 -->
+				<li sec:authorize="hasRole('ROLE_USER')" class="nav-item"><a
+					class="nav-link" href="/home">首頁</a></li>
+				<li sec:authorize="hasRole('ROLE_USER')" class="nav-item"><a
+					class="nav-link" href="/reservation/list">訂單管理</a></li>
+				<li sec:authorize="hasRole('ROLE_USER')" class="nav-item"><a
+					class="nav-link" href="/user/account">我的帳戶</a></li>
+			</ul>
+		</div>
+	</div>
 </nav>
 
 </html>

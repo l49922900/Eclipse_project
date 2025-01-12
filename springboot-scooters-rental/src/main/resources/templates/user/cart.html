@@ -21,7 +21,10 @@
 			class="table table-bordered table-striped mt-4">
 			<thead>
 				<tr>
+					<th>機車ID</th>
+					<th>車牌號碼</th>
 					<th>機車型號</th>
+					<th>CC數</th>
 					<th>開始日期</th>
 					<th>結束日期</th>
 					<th>總金額</th>
@@ -30,7 +33,10 @@
 			</thead>
 			<tbody>
 				<tr th:each="reservation : ${cart}">
+					<td th:text="${reservation.scooter.scooterId}"></td>
+					<td th:text="${reservation.scooter.licensePlate}"></td>
 					<td th:text="${reservation.scooter.model}"></td>
+					<td th:text="${reservation.scooter.cc}"></td>
 					<td th:text="${reservation.startDate}"></td>
 					<td th:text="${reservation.endDate}"></td>
 					<td th:text="${reservation.totalAmount}"></td>
