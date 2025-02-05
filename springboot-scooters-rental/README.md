@@ -14,3 +14,10 @@
     2.前台:註冊登入、預約租車、個人訂單管理。
   
     3.後台:會員管理、車輛資訊、車輛維修、訂單管理、流量監控。
+
+
+## 資料庫結構 (ER Model)
+
+以下是專案的資料庫 ER 模型圖：
+
+![ER Model](UserspcDownloadsimage/ER_MODEL.png)
