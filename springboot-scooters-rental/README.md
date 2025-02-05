@@ -20,4 +20,4 @@
 
 以下是專案的資料庫 ER 模型圖：
 
-![ER Model](UserspcDownloadsimage/ER_MODEL.png)
+![ER Model](ER_MODEL.jpg)
