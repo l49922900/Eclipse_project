@@ -10,7 +10,7 @@ public class MonitoringController {
 
     @GetMapping
     public String showMonitoringPage() {
-        return "monitoring";  // 這會返回 monitoring.html 頁面
+        return "admin/monitoring";  // 這會返回 monitoring.html 頁面
     }
 }
 

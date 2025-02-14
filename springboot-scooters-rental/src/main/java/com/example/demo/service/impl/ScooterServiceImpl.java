@@ -144,6 +144,7 @@ public class ScooterServiceImpl implements ScooterService {
 如果 type 是 null 或空字串，則表示「不使用這個條件進行篩選」，通過這個檢查的機車將被保留。
 如果 type 有值，則篩選出 type 與機車的 type 相符的結果。     
  */
+               
        
                 .filter(scooter -> cc == null || cc.isEmpty() || scooter.getCc().equals(Integer.parseInt(cc)))
 //Integer.parseInt(cc) 是將字串直接轉換成基本型別 int。由於 equals() 方法是物件的方法，Java 會自動將 parseInt() 產生的 int 透過自動裝箱(autoboxing)轉換成 Integer 物件，以便能夠調用 equals() 方法。

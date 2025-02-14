@@ -44,7 +44,14 @@ public class GenericsIntroduction20241010 {
 			1.替換為其邊界類型（Bounded Type）：如果泛型有明確的邊界，例如 T extends Number，那麼在編譯後，泛型型別 T 將被替換為其邊界類型 Number。
 			2.替換為 Object：如果泛型沒有明確的邊界（例如 T 沒有指定上界），那麼在編譯後，泛型型別 T 將被替換為 Object。	
 			3.造成的限制:由於型別在編譯後被擦除，無法在執行時取得具體的泛型型別資訊	
+			4.雖說因為型別擦除程式中不再保留具體的泛型型別資訊，然而因為泛型型別檢查發生在編譯時，編譯器在編譯時提供了型別安全性，防止了不正確的型別操作，所以會有以下結果:
 			
+				List<String> list = new ArrayList<>();
+				list.add("Hello");
+				list.add(123); // 編譯錯誤，因為編譯器發現型別不匹配
+
+			在這段程式碼中，list 被宣告為 List<String>，因此編譯器會在編譯階段檢查所有對 list 的操作，並確保你只能加入 String 型別的元素。
+			如果你嘗試加入非 String 型別（如 123，它是 int），編譯器會直接報錯。
 			
 			////////////////////////////////////////
 
@@ -92,7 +99,7 @@ public class GenericsIntroduction20241010 {
 		
 
 		/*
-		不變性（Invariance）:沒有共變性（Covariance）與逆變性（Contravariance），下面會解釋。
+		不變性（Invariance）:沒有共變性（Covariance）與逆變性（Contravariance）
 			
 		沒有共變性:
 			

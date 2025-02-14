@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class AuthController {
+	//AuthController:用於處理與認證 (Authentication) 和授權 (Authorization) 有關的請求。
 
     @Autowired
     private UserRepository userRepository;
@@ -46,8 +47,8 @@ public class AuthController {
     public String showRegisterPage(Model model) {
         model.addAttribute("registrationRequest", new RegistrationRequest());
 /*
-初始化一個空的 RegistrationRequest 物件，並將其放入 Model 中，
-讓頁面（register.html）可以使用。        
+初始化一個空的 RegistrationRequest 物件，並將其放入 Model 中，讓頁面（register.html）可以使用。
+這樣在 Thymeleaf 模板 register.html 中可以透過 ${registrationRequest} 取得這個物件，方便表單綁定。        
  */
         
         return "user/register";
@@ -110,6 +111,4 @@ public class AuthController {
     	
         return user.getRole() == Role.admin ? "redirect:/admin/scooter" : "user/home";
     }
-    
-
 }

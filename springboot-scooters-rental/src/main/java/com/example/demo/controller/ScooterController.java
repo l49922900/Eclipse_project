@@ -61,6 +61,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 public class ScooterController {
 
+	
 	@Autowired
 	private FileService fileService;
 
@@ -83,6 +84,10 @@ public class ScooterController {
 // */
 //    }
 
+	
+	
+	
+	
 	@GetMapping
 	public String getScooters(Model model, @ModelAttribute ScooterDto scooterDto) {
 		// 查詢所有機車，顯示到 scooter/scooter 頁面
@@ -130,6 +135,13 @@ public class ScooterController {
 		 * return "redirect:/scooters"; 表示當完成一個請求後，將客戶端重定向（redirect）到 /scooters 路徑。
 		 * 這是為了避免在表單提交後重新整理頁面時重複提交資料，這是一種常見的 Post/Redirect/Get (PRG) 設計模式。
 		 */
+	}
+	
+	@GetMapping("/plus")
+	public String Plus1(@RequestParam(required = false)Integer number,Model model){
+		number = number + 1;
+		model.addAttribute("newString",number);
+		return "redirect:/admin/scooters/number";
 	}
 
 	@GetMapping("/delete/{scooterId}")

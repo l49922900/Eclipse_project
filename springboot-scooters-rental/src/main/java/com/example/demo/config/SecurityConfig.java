@@ -39,6 +39,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
         .authorizeHttpRequests(authorize -> authorize
+//        	.requestMatchers("/actuator/**", "/actuator/prometheus/**").permitAll() // 允許訪問 Actuator 端點
+        	.requestMatchers("/register").permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().hasAnyRole("ADMIN", "USER")
         )
