@@ -16,6 +16,11 @@
 		<div th:if="${success}"
 			class="alert alert-success alert-dismissible fade show" role="alert">
 			<span th:text="${success}"></span>
+<!--  th:if:是 Thymeleaf 提供的屬性，作用類似於 Java 中的 if 條件判斷。
+	  當th:if="${success}的值 不為 null 且不為空 時，包含這個 th:if 的 HTML 元素就會被顯示。
+	  如果 success 的值 為 null 或為空，則該元素不會被渲染，也就是說 整個 HTML 標籤會被跳過，不出現在頁面上。
+	  在重定向後的新頁面中，可以使用 ${success} 或 ${error} 來取得之前設置的訊息。
+	  由於 Flash Attributes 只存在於重定向後的第一個請求中，因此這些訊息只會顯示一次，頁面重新整理後就會消失。 -->			
 			<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 		</div>
 		<div th:if="${error}"
@@ -133,8 +138,9 @@
 												<div class="modal-body">
 													<div class="mb-3">
 														<label class="form-label">損壞說明</label>
-														<textarea class="form-control" name="note" rows="3"
+														<textarea class="form-control" name="note" rows="3"								
 															required></textarea>
+             				 <!-- name="note"：它將這個 <textarea> 的輸入值綁定到 MaintenanceActionForm 的 note 屬性上。 -->																
 													</div>
 												</div>
 												<div class="modal-footer">

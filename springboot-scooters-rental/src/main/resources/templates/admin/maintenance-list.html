@@ -20,6 +20,11 @@
                         <div class="col-md-3">
                             <label class="form-label">零件ID</label>
                             <input type="text" name="partId" class="form-control" th:value="${param.partId}">
+        <!-- 用途:將後端控制器中的 partId 參數的值顯示在搜尋框中。
+        	 ${param.partId} 會從 Thymeleaf 的模型中取出 partId 的值，並把它設定為 <input> 欄位的預設值（value）。
+        	 如果 partId 參數是從前端傳過來的，它會在頁面載入時顯示在欄位內，讓使用者可以知道自己正在搜尋的內容。
+			 param 是 Spring MVC 中的查詢參數（query parameter），用於將 URL 查詢參數傳遞至 Thymeleaf 模板。  -->                                 
+                            
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">使用者ID</label>
@@ -31,14 +36,29 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">操作類型</label>
+                            
+                            
+                            
                             <select name="actionType" class="form-select">
+             <!-- 這段程式碼創建了一個下拉選單，並將 actionTypes 這個集合中的每個元素作為選項顯示。 -->               
                                 <option value="">全部</option>
                                 <option th:each="type : ${actionTypes}"
                                         th:value="${type}"
                                         th:text="${type}"
                                         th:selected="${param.actionType == type}">
                                 </option>
+            <!-- th:each :是 Thymeleaf 的迴圈指令，用來遍歷 actionTypes 集合中的每一個 type，並為每個元素生成一個 <option> 標籤。
+            	 		 ${actionTypes} 會是後端傳遞到模板的資料
+            	 th:text :設定 <option> 標籤顯示的文字為 type 的文字值。
+            	 th:selected :如果 param.actionType 的值等於當前的 type，則這個選項會被選中。
+            	 		 這讓使用者在頁面載入時，根據已經選擇的操作類型來顯示對應的選項。
+             -->                    
+                                
+                                
                             </select>
+                        
+                        
+                        
                         </div>
                     </div>
                     <div class="text-center mt-4">
@@ -63,7 +83,10 @@
                     </tr>
                 </thead>
                 <tbody>
+                
                     <tr th:each="maintenance : ${maintenances}">
+                <!-- 顯示搜尋結果的表格 -->
+                <!-- th:each :使用 Thymeleaf 的 th:each 迴圈指令，從模型中的 maintenances 列表中迭代每一筆維修紀錄。 --> 
                         <td th:text="${maintenance.maintenanceId}"></td>
                         <td th:text="${maintenance.scooterPart.partId}"></td>
                         <td th:text="${maintenance.admin.userId}"></td>
@@ -71,6 +94,9 @@
                         <td th:text="${#temporals.format(maintenance.actionDate, 'yyyy-MM-dd')}"></td>
                         <td th:text="${maintenance.notes}"></td>
                     </tr>
+                    
+                    
+                    
                     <tr th:if="${maintenances == null || #lists.isEmpty(maintenances)}">
                         <td colspan="6" class="text-center">查無紀錄</td>
                     </tr>

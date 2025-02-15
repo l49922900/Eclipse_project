@@ -19,15 +19,31 @@
             <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
             <form th:action="@{/register}" th:object="${registrationRequest}" method="post">
+     <!-- th:object 是 Thymeleaf 中的一個屬性，用於將整個表單綁定到一個物件。
+     它的主要作用是讓表單中的各個欄位可以自動對應到這個物件的屬性，從而方便資料的輸入、顯示和提交。 
+     
+     如果用了 th:field，就不需要手動設置 name，因為 Thymeleaf 會自動設置name 和 id(與th:field的內容一致)。
+     -->      
+                
+                
                 <div class="mb-3">
                     <label for="username" class="form-label">帳號</label>
                     <input type="text" id="username" name="username" class="form-control" th:field="*{username}" required>
+     <!--  th:field:*{username} 表示綁定到 registrationRequest 物件的 username 屬性。
+		   當用戶在 username 欄位中輸入資料並提交後，後端的 RegistrationRequest 物件會自動接收到此資料。 
+		   資料回顯：如果表單提交後有驗證錯誤，頁面會重新顯示，且用戶之前輸入的資料會自動保留在對應欄位中，這是因為 th:field 與 th:object 的雙向綁定。
+		   -->                
+                    
                     <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">密碼</label>
                     <input type="password" id="password" name="password" class="form-control" th:field="*{password}" required>
                     <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+     <!-- th:if="${#fields.hasErrors('password')}":如果 password 欄位不符合在 RegistrationRequest 中設置的驗證條件（例如密碼格式錯誤），
+     	  那麼 #fields.hasErrors('password') 就會回傳 true，此時 <div> 會被渲染並顯示在頁面上。 -->               
+     <!-- th:errors="*{password}":顯示對應的錯誤訊息 -->                
+                    
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">電子郵件</label>

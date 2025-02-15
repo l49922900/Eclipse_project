@@ -57,8 +57,16 @@ public class AuthController {
     // 處理註冊請求
     @PostMapping("/register")
     public String register(@Validated @ModelAttribute RegistrationRequest registrationRequest,
-                           BindingResult bindingResult,
-                           Model model) {
+    		BindingResult bindingResult,Model model) {
+    /*
+    @Validated：啟用表單驗證，根據 RegistrationRequest 中的驗證註解進行檢查。
+    @ModelAttribute：將表單提交的資料綁定到 RegistrationRequest 物件中。	
+    Model：主要用於 將數據傳遞到視圖，如Thymeleaf
+    BindingResult bindingResult：儲存驗證結果，如果有錯誤 (例如欄位不符合格式)，會在這裡記錄。
+    */
+    	
+    	
+    	
         if (bindingResult.hasErrors()) {
             return "user/register";
         }
@@ -105,6 +113,8 @@ public class AuthController {
     
     @GetMapping("/home")
     public String showHomePage(Authentication authentication) {
+    //showHomePage:依角色轉導相應首頁	
+    //Authentication:是 Spring Security 用來存放目前登入使用者資訊的物件。 	
     	String username = authentication.getName();
         User user = userRepository.findByUsername(username)
                                   .orElseThrow(() -> new UserNotFoundException("User not found"));

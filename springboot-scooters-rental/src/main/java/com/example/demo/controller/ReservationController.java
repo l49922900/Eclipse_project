@@ -62,6 +62,7 @@ public class ReservationController {
 	private final ReservationService reservationService;
 	private final UserRepository userRepository;
 	private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
+	//使用 SLF4J 和 LoggerFactory 取得日誌實例。用於 ReservationController 中進行日誌紀錄。
 	
 	public ReservationController(ScooterService scooterService,ReservationService reservationService,UserRepository userRepository) {
 		this.scooterService = scooterService;
@@ -76,7 +77,7 @@ public class ReservationController {
         LocalDate startDate = reservation.getStartDate();
         LocalDate endDate = reservation.getEndDate();
 
-     // 計算租借天數
+        // 計算租借天數
         long rentalDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
         
         
