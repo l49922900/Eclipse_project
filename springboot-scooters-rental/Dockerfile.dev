@@ -1,0 +1,54 @@
+# === Build Stage ===
+# 指定基底映像檔，是建立新映像檔的起點。
+FROM eclipse-temurin:17-jdk AS build
+
+
+# 功能： 設定工作目錄。當你執行 Docker 容器中的命令時，這會告訴 Docker 要在 /app 目錄中執行。相當於在操作系統中 cd /app。
+# 用途： 這樣可以確保後續的指令（如 COPY 或 RUN）都在 /app 目錄內進行。
+WORKDIR /app
+
+
+# 功能： 將本機的 src 目錄中的檔案複製到容器的 ./src 目錄中。這裡的 . 表示容器中的當前工作目錄（即 /app）。
+# 用途： 把源代碼（src 目錄）複製到容器中，以便在容器內進行編譯。
+COPY pom.xml .
+COPY src ./src
+
+# # 複製 .mvn 目錄到容器中
+COPY .mvn .mvn
+
+# 複製 mvnw 和 mvnw.cmd 檔案到容器中
+# mvnw (Maven Wrapper) 是一個用於 Maven 專案的 shell 腳本。它的作用是在沒有事先安裝 Maven 的環境下，也能夠執行 Maven 命令。
+COPY mvnw .
+COPY mvnw.cmd . 
+
+# 執行指令來安裝軟體或執行設定，結果會寫入映像檔中。
+RUN ./mvnw clean package -DskipTests
+
+# === Run Stage ===
+FROM eclipse-temurin:17-jdk
+
+# 功能： 設定環境變數。在這裡，它設置了 JAVA_OPTS 變數，並將 spring.profiles.active 設定為 prod，即選擇生產環境的配置。
+# 用途： 讓 Spring Boot 應用在啟動時使用 prod 配置檔，這通常會包含生產環境的設定。
+ENV JAVA_OPTS="-Dspring.profiles.active=dev"
+
+#功能： 創建一個新的用戶組 spring 和用戶 spring。 -S 參數是指創建系統用戶和組，並將用戶添加到組中。
+# 用途： 在容器中使用非 root 用戶來執行應用程序。這樣可以提高容器的安全性，防止容器內的應用有過多的權限。
+RUN addgroup --system spring && adduser --system --ingroup spring spring
+
+# 功能： 指定接下來所有命令會以 spring 用戶和 spring 用戶組的身份執行。
+# 用途： 避免在容器內使用 root 用戶來執行應用。這是最佳安全實踐，讓應用只擁有運行的最低權限。
+USER spring:spring
+
+
+# 設定工作目錄，後續指令會在此目錄中執行。
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+
+# 定義容器內的應用程式會使用的埠號 (port)，用於告知其他服務。
+EXPOSE 8080
+
+# 功能： 設定容器啟動時執行的命令。這裡的 ENTRYPOINT 設置了容器啟動後運行的命令。它會運行 sh -c "java $JAVA_OPTS -jar app.jar"，即使用 sh 執行 Java 應用程式。
+# $JAVA_OPTS 會被展開為 -Dspring.profiles.active=prod，讓應用在生產環境中運行。
+# app.jar 是之前複製到容器中的 JAR 檔案。
+# 用途： 設定容器啟動時的行為，使其運行 Spring Boot 應用。
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
