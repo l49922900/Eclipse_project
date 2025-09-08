@@ -49,7 +49,7 @@ public class ScooterApiController {
 	}
 	
 	
-	@PutMapping("/scooter/{id}")
+	@PutMapping("/scooters/{id}")
 	public ResponseEntity<Void> updateScooter(@PathVariable("id") Integer id,@RequestBody ScooterDto scooterDto){
 		System.out.println("Updating scooter with id: " + id);
 		scooterService.updateScooter(id, scooterDto);
@@ -57,7 +57,7 @@ public class ScooterApiController {
 		
 	}
 	
-	@DeleteMapping("/scooter/{id}")
+	@DeleteMapping("/scooters/{id}")
 	public ResponseEntity<Void>deleteScooter(@PathVariable("id") Integer id){
 		System.out.println("Deleting scooter with id: " + id);
         scooterService.deleteScooter(id);

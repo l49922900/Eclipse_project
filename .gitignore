@@ -1,1 +1,3 @@
 springboot-scooters-rental/logs/app.log
+# dependencies
+/node_modules

@@ -147,7 +147,7 @@ export default {
     fetchScooters() {
       this.isLoading = true;
       const activeFilters = Object.fromEntries(
-        Object.entries(this.filters).filter(([_, v]) => v != null && v !== '')
+        Object.entries(this.filters).filter(([, v]) => v != null && v !== '')
       );
       axios.get('/api/scooters', { params: activeFilters })
         .then(response => {

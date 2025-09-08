@@ -68,7 +68,7 @@
       data() {
         return {
           // formData 是表單內部的資料狀態
-          // 我們不直接修改 prop 'item'，而是建立一個複本
+          // 不直接修改 prop 'item'，而是建立一個複本
           formData: {},
         };
       },

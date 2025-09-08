@@ -81,114 +81,38 @@
       </v-card-text>
     </v-card>
 
-    <v-dialog v-model="addDialog" persistent max-width="600px">
-      <!--:v-model="addDialog" 將對話框的開關狀態與 data 裡的 addDialog 變數雙向綁定。當 addDialog 為 true 時，對話框會顯示；為 false 時則隱藏。-->
-      <!--v-model:用於實現雙向資料綁定-->
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">新增車輛</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  label="車牌號碼*"
-                  v-model="newScooter.licensePlate"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="機車型號*"
-                  v-model="newScooter.model"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select
-                  :items="['100', '125', '150', '200']"
-                  label="引擎排氣量*"
-                  v-model="newScooter.cc"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select
-                  :items="['scooter', 'manual']"
-                  label="車種*"
-                  v-model="newScooter.type"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="日租費率*"
-                  v-model.number="newScooter.dailyRate"
-                  type="number"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="車況描述"
-                  v-model="newScooter.conditionNote"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="上次保養日期"
-                  v-model="newScooter.lastMaintenanceDate"
-                  type="date"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-container>
-          <small>*表示必填欄位</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue-darken-1" variant="text" @click="closeAddDialog"
-            >取消</v-btn
-          >
-          <v-btn color="blue-darken-1" variant="text" @click="addScooter"
-            >儲存</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
-    <v-dialog v-model="deleteDialog" max-width="500px">
-      <v-card>
-        <v-card-title class="text-h5">確定要刪除這輛車嗎？</v-card-title>
-        <v-card-text>
-          車牌號碼:{{ itemToDelete.licensePlate }}<br />
-          <!--{{ }} 是 Vue 的模板語法，用來顯示資料-->
-          此操作無法復原。
-        </v-card-text>
-        <v-card-actions
-          ><!--<v-card-actions>：這是一個放置按鈕的區域，通常位於卡片的底部。-->
-          <v-spacer></v-spacer>
-          <v-btn color="blue-darken-1" variant="text" @click="closeDeleteDialog"
-            >取消</v-btn
-          >
-          <v-btn
-            color="red-darken-1"
-            variant="text"
-            @click="deleteScooterConfirm"
-            >確認刪除</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <!-- 使用 ScooterForm 元件 -->
+    <scooter-form
+      :show="dialog"
+      :title="dialogTitle"
+      :item="editedItem"
+      @close="closeDialog"
+      @save="saveScooter"
+    ></scooter-form>
+
+    <!-- 使用 ConfirmDialog 元件 -->
+    <confirm-dialog
+      :show="deleteDialog"
+      title="確認刪除"
+      :message="`確定要刪除車牌為 ${itemToDelete.licensePlate} 的車輛嗎？此操作無法復原。`"
+      @cancel="closeDeleteDialog"
+      @confirm="deleteScooterConfirm"
+    ></confirm-dialog>
+   
   </v-container>
 </template>
 
 <script>
 import axios from "axios"; //這是一個用於發送 HTTP 請求（例如向後端 API 獲取資料）的常用工具
+import ScooterForm from '../components/ScooterForm.vue';
+import ConfirmDialog from '../components/ConfirmDialog.vue';
 export default {
-  name: "ScooterList",
+  name: "ScooterManagement",
+        components: {
+        ScooterForm,
+        ConfirmDialog,
+      },
   data() {
     //返回一個物件，其中包含了元件的響應式資料
     return {
@@ -220,8 +144,37 @@ export default {
       },
       editedItem: {}, //用於儲存正在編輯的車輛資料
       itemToDelete: {}, //用於儲存準備刪除的車輛資料
+
+      filters: { //用一個物件來存放所有的篩選條件
+        type: null,
+        cc: null,
+        status: null,
+        dailyRate: null,
+      },
+
+      debounceTimer: null, //用於 Debounce (防抖) 的計時器
     };
   },
+
+  //使用 watch 來監聽 filters 物件的變化
+  watch: {
+    filters: {
+      handler() {
+        // Debounce 邏輯：
+        // 當 filters 改變時，先清除上一個計時器
+        clearTimeout(this.debounceTimer);
+        // 然後設定一個新的計時器，500 毫秒後才執行 fetchScooters
+        // 如果使用者在這 500 毫秒內又改變了篩選條件，上一個計時器就會被清除，重新計時
+        // 這樣可以避免使用者快速操作時，發送大量的 API 請求
+        this.debounceTimer = setTimeout(() => {
+          this.fetchScooters();
+        }, 500); // 延遲 500 毫秒
+      },
+      deep: true, // deep: true 表示要深度監聽物件內部屬性的變化
+    },
+  },
+
+
   mounted() {
     // Vue 元件的一個生命週期鉤子函式。當元件被「掛載」到網頁上時，mounted 裡的程式碼會被自動執行一次
     console.log("ScooterList 元件已掛載，準備獲取資料...");
@@ -230,8 +183,13 @@ export default {
   methods: {
     fetchScooters() {
       this.isLoading = true; // 開始請求前，顯示 loading
-      axios
-        .get("/api/scooters")
+      console.log('Fetching scooters with filters:', this.filters);
+      
+      const activeFilters = Object.fromEntries(
+        Object.entries(this.filters).filter(([, v]) => v != null && v !== '')
+      );
+
+      axios.get('/api/scooters', { params: activeFilters }) // axios 會自動將 params 物件轉換成 URL 查詢字串
         .then((response) => {
           //當請求成功時執行。它將後端返回的資料 (response.data) 賦值給 this.scooters，從而觸發表格更新。
           console.log("成功獲取資料:", response.data);
@@ -245,55 +203,21 @@ export default {
         });
     },
     openAddDialog() {
-      this.addDialog = true;
+      this.isEditMode = false;
+      this.editedItem = {};
+      this.dialogTitle = '新增車輛';
+      this.dialog = true;
     },
-    closeAddDialog() {
-      this.addDialog = false;
-      // 清空表單
-      this.newScooter = {
-        licensePlate: "",
-        model: "",
-        cc: null,
-        type: "",
-        dailyRate: null,
-        conditionNote: "",
-        lastMaintenanceDate: null,
-      };
-    },
-    addScooter() {
-      // 發送 POST 請求到後端
-      axios
-        .post("/api/scooters", this.newScooter)
-        .then((response) => {
-          console.log("新增成功:", response.data);
-          // 重新獲取一次列表，或直接將新資料推進陣列
-          this.fetchScooters(); //如果請求成功，會呼叫 fetchScooters() 重新整理表格，並呼叫 closeAddDialog() 關閉對話框。
-          this.closeAddDialog(); // 關閉 Dialog
-        })
-        .catch((error) => {
-          console.error("新增滑板車時發生錯誤:", error);
-          // 可以在這裡加入錯誤提示給使用者
-        });
-    },
+
     openEditDialog(item) {
       this.editedItem = Object.assign({}, item); // 複製一份物件，避免直接修改原始資料
       this.editDialog = true;
     },
-    closeEditDialog() {
-      this.editDialog = false;
+
+    closeDialog() {
+      this.dialog = false;
     },
-    updateScooter() {
-      axios
-        .put(`/api/scooter/${this.editedItem.scooterId}`, this.editedItem)
-        .then((response) => {
-          console.log("更新成功:", response.data);
-          this.fetchScooters();
-          this.closeEditDialog();
-        })
-        .catch((error) => {
-          console.error("更新滑板車時發生錯誤:", error);
-        });
-    },
+
     openDeleteDialog(item) {
       this.itemToDelete = item;
       this.deleteDialog = true;
@@ -301,16 +225,36 @@ export default {
     closeDeleteDialog() {
       this.deleteDialog = false;
     },
+
+    saveScooter(scooterData) {
+      console.log('接收到儲存事件，資料:', scooterData);
+      const promise = this.isEditMode
+        ? axios.put(`/api/scooters/${scooterData.scooterId}`, scooterData)
+        : axios.post('/api/scooters', scooterData);
+
+      promise.then(() => {
+        console.log('儲存成功');
+        this.fetchScooters();
+      }).catch(error => {
+        console.error('儲存失敗:', error);
+      }).finally(() => {
+        this.closeDialog();
+      });
+    },
+    
+
     deleteScooterConfirm() {
-      axios
-        .delete(`/api/scooters/${this.itemToDelete.scooterId}`)
+      console.log(`準備刪除 ID: ${this.itemToDelete.scooterId}`);
+      axios.delete(`/api/scooters/${this.itemToDelete.scooterId}`)
         .then(() => {
-          console.log("刪除成功");
+          console.log('刪除成功');
           this.fetchScooters();
-          this.closeDeleteDialog();
         })
-        .catch((error) => {
-          console.error("刪除滑板車時發生錯誤:", error);
+        .catch(error => {
+          console.error('刪除失敗:', error);
+        })
+        .finally(() => {
+          this.closeDeleteDialog();
         });
     },
   },
