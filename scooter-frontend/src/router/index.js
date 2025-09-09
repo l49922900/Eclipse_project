@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/HomePage.vue";
+import HomePage from "../views/HomePage.vue";
 import ScooterManagement from "../views/ScooterManagement.vue";
+import Login_page from "@/views/Login_page.vue";
 
 //定義路由表
 // 每個路由都是一個物件，包含 path (URL路徑) 和 component (要顯示的元件)
@@ -8,15 +9,18 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: HomePage,
   },
   {
     path: "/admin/scooters",
     name: "ScooterManagement",
     component: ScooterManagement,
   },
-  // 未來可以新增更多路由，例如會員管理
-
+  {
+    path: "/Login_page",
+    name: "SLogin_page",
+    component: Login_page,
+  },
 ];
 
 //建立 router 實例
