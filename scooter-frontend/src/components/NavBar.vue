@@ -11,8 +11,9 @@
         <v-spacer></v-spacer>
 
         <!-- 如果使用者"未"登入，就顯示"登入"按鈕 -->
-        <v-btn v-if="!authStore.isAuthenticated" to = "/login" text>登入</v-btn>
+        <v-btn v-if="!authStore.isAuthenticated" to = "/LoginPage" text>登入</v-btn>
 
+        <v-btn v-if="authStore.isAuthenticated" to="/admin/UserManagement" text>會員管理</v-btn>
 
         <!-- 如果使用者"已"登入，就顯示"登出"按鈕 -->
         <!-- @click="logout" 會在按鈕被點擊時，呼叫我們在 script 中定義的 logout 方法 -->
@@ -27,6 +28,20 @@
 
     export default {
       name: 'NavBar',
+
+      setup() {
+        const authStore = useAuthStore();
+
+        const logout = () =>{
+          console.log('觸發登出');
+          authStore.logout();
+        };
+
+        return{
+          authStore,
+          logout
+        };
+      }
     };
     </script>
     

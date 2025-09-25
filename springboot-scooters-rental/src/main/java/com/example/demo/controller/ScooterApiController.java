@@ -20,7 +20,7 @@ import com.example.demo.model.entity.Scooter;
 import com.example.demo.service.ScooterService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin/")
 public class ScooterApiController {
 
 	
@@ -28,7 +28,7 @@ public class ScooterApiController {
 	private ScooterService scooterService;
 	
 	
-	@GetMapping("/scooters")
+	@GetMapping("/getAllScooters")
     public ResponseEntity<List<ScooterDto>> getAllScooters() {
         // 從 Service 獲取所有 Scooter 實體
         List<ScooterDto> scooterDtos = scooterService.getAllScooters();

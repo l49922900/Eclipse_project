@@ -219,7 +219,7 @@ public class ReservationController {
                                       .orElseThrow(() -> new UserNotFoundException("User not found"));
 
             // 取得 userId
-            Integer userId = user.getUserId();
+            Integer userId = user.getUserId().intValue();
         	
             reservationService.addToCart(reservation.getScooterId(), reservation.getStartDate(), reservation.getEndDate(), userId);
             redirectAttributes.addFlashAttribute("successMessage", "成功將機車加入購物車！");
@@ -338,7 +338,7 @@ public class ReservationController {
         
         ReservationDto reservation = new ReservationDto();
         reservation.setReservationId(reservationEntity.getReservationId());
-        reservation.setUserId(reservationEntity.getUser().getUserId());  // 手動設定 UserId
+        reservation.setUserId(reservationEntity.getUser().getUserId().intValue());  // 手動設定 UserId
         reservation.setScooterId(reservationEntity.getScooter().getScooterId());  // 手動設定 ScooterId
         reservation.setReservationDate(reservationEntity.getReservationDate());
         reservation.setStartDate(reservationEntity.getStartDate());

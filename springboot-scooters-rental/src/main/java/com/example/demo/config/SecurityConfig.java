@@ -39,7 +39,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable()) // 停用 CSRF，因為我們使用 token
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/register", "/login").permitAll() // 開放登入註冊 API
-                .requestMatchers("/api/scooters/**").hasRole("ADMIN") // 保護 scooters API，只允許 ADMIN 訪問
+                .requestMatchers("/api/admin/**").hasRole("ADMIN") // 保護 scooters API，只允許 ADMIN 訪問
                 .anyRequest().authenticated() // 其他所有請求都需要認證
             )
             .sessionManagement(session -> session

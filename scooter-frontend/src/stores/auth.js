@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -16,7 +15,7 @@ export const useAuthStore = defineStore("auth", {
     async login(credentials) {
       try {
         console.log("正在嘗試登入，使用者名稱:", credentials.username);
-        const response = await axios.post("/api/auth/login", credentials);
+        const response = await axios.post("/login", credentials);
         const token = response.data.token;
 
         if (token) {
@@ -26,6 +25,7 @@ export const useAuthStore = defineStore("auth", {
           axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           console.log("登入成功，取得 Token:", token);
           // 登入成功後跳轉
+          // *** 這裡的 this.router 是透過 main.js 注入的 ***
           this.router.push("/admin/scooters");
         }
       } catch (error) {
@@ -43,6 +43,7 @@ export const useAuthStore = defineStore("auth", {
       // 移除 Axios 的預設 Header
       delete axios.defaults.headers.common["Authorization"];
       // 登出後跳轉回首頁
+      // *** 這裡的 this.router 是透過 main.js 注入的 ***
       this.router.push("/");
     },
   },
