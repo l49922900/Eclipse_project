@@ -1,5 +1,7 @@
 package com.example.demo.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.demo.jwt.JwtRequestFilter;
 
@@ -36,9 +41,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // 停用 CSRF，因為我們使用 token
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        	.csrf(csrf -> csrf.disable()) // 停用 CSRF，因為使用 token
+        	.formLogin(form -> form.disable())
+            .httpBasic(basic -> basic.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/register", "/login").permitAll() // 開放登入註冊 API
+                .requestMatchers("/api/auth/**").permitAll() // 開放登入註冊 API
                 .requestMatchers("/api/admin/**").hasRole("ADMIN") // 保護 scooters API，只允許 ADMIN 訪問
                 .anyRequest().authenticated() // 其他所有請求都需要認證
             )
@@ -50,6 +58,25 @@ public class SecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+    
+    
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // 允許來自 Vue 前端開發伺服器的請求
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080")); 
+        // 允許所有請求方法 (GET, POST, PUT, DELETE, etc.)
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        // 允許所有請求標頭
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        // 允許傳送憑證 (如 cookies)
+        configuration.setAllowCredentials(true);
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // 對所有 API 路徑套用此 CORS 設定
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 	
 //	@Bean

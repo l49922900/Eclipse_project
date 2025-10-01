@@ -15,7 +15,7 @@ export const useAuthStore = defineStore("auth", {
     async login(credentials) {
       try {
         console.log("正在嘗試登入，使用者名稱:", credentials.username);
-        const response = await axios.post("/login", credentials);
+        const response = await axios.post("/api/auth/login", credentials);
         const token = response.data.token;
 
         if (token) {

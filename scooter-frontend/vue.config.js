@@ -4,7 +4,15 @@ module.exports = defineConfig({
 
   pluginOptions: {
     vuetify: {
-			// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
-		}
-  }
-})
+      // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
+    },
+  },
+  devServer: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8086", // 確保這是您 Spring Boot 後端的正確端口
+        changeOrigin: true,
+      },
+    },
+  },
+});

@@ -1,9 +1,5 @@
 <template>
   <v-container class="fill-height" fluid>
-    <!-- DEBUG: 臨時顯示於左上角，確認元件是否在 DOM 中 -->
-    <div id="login-debug-badge" style="position:fixed; top:8px; left:8px; z-index:9999; background: #fffa; color:#000; padding:6px; border:1px solid #333;">
-      LoginPage DEBUG
-    </div>
 
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="4">
